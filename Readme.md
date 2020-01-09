@@ -1,4 +1,4 @@
-# Rhoc
+# RHOC - Rapid HPC Orchestration in the Cloud
 
 1. [Introduction](#introduction)
    1. [Overview](#overview)
