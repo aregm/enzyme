@@ -1,0 +1,42 @@
+image: Rhoc
+
+stages:
+  - build
+  - test
+
+build_tags:
+  stage: build
+  script:
+    - make GOOS=linux
+    - make GOOS=windows
+    - make GOOS=darwin
+  only:
+    - tags
+  artifacts:
+    paths:
+      - package-*.tar.gz
+    expire_in: 1 yrs
+
+
+build:
+  stage: build
+  script:
+    - make bin
+  except:
+    - tags
+
+test:
+  stage: test
+  script:
+    - go test -coverprofile=coverage.out -mod=vendor ./cmd/... ./pkg/...
+    - go tool cover -func=coverage.out
+
+test_required_linters:
+  stage: test
+  script:
+    - golangci-lint run --config CI/golangci_required_linters.yml cmd/... pkg/...
+  
+test_optional_linters:
+  stage: test
+  script:
+    - golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...

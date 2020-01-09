@@ -1,0 +1,6 @@
+[submodule "hashicorp/terraform"]
+	path = hashicorp/terraform
+	url = https://github.com/hashicorp/terraform.git
+[submodule "hashicorp/packer"]
+	path = hashicorp/packer
+	url = https://github.com/hashicorp/packer.git
