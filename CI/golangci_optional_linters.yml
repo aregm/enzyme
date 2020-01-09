@@ -1,0 +1,138 @@
+# see more about used linters https://github.com/golangci/golangci-lint#supported-linters
+# options for analysis running
+run:
+
+  # timeout for analysis, e.g. 30s, 5m
+  timeout: 5m
+
+  # don't fail for optional linters
+  issues-exit-code: 0
+
+
+# specific linters settings
+linters-settings:
+  
+  gocyclo:
+    # minimal code complexity to report
+    min-complexity: 10
+
+  gocognit:
+    # minimal code complexity to report
+    min-complexity: 10
+   
+  godox:
+    # report any comments starting with keywords, this is useful for TODO or FIXME comments that
+    # might be left in the code accidentally and should be resolved before merging
+    keywords: # default keywords are TODO, BUG, and FIXME, these can be overwritten by this setting
+      - NOTE
+      - OPTIMIZE # marks code that should be optimized before merging
+      - HACK # marks hack-arounds that should be removed before merging
+  maligned:
+    # print struct with more effective memory layout or not
+    suggest-new: true
+
+  misspell:
+    # Correct spellings using locale preferences for US or UK
+    locale: US
+
+  depguard:
+    list-type: blacklist
+    include-go-root: false
+    packages:
+      - github.com/sirupsen/logrus
+
+  lll:
+    # max line length, lines longer will be reported
+    line-length: 110
+    # tab width in spaces
+    tab-width: 4
+
+  wsl:
+    # If true append is only allowed to be cuddled if appending value is
+    # matching variables, fields or types on line above.
+    strict-append: true
+    # Allow calls and assignments to be cuddled as long as the lines have any
+    # matching variables, fields or types.
+    allow-assign-and-call: true
+    # Allow multiline assignments to be cuddled.
+    allow-multiline-assign: true
+    # Allow declarations (var) to be cuddled.
+    allow-cuddle-declarations: true
+    # Allow trailing comments in ending of blocks
+    allow-trailing-comment: true
+    # Force newlines in end of case at this limit (0 = never).
+    force-case-trailing-whitespace: 0
+
+linters:
+  enable:
+    # Inspects source code for security problems
+    - gosec
+    # Computes and checks the cyclomatic complexity of functions
+    - gocyclo
+    # Computes and checks the cognitive complexity of functions
+    - gocognit
+    # Detect Go structs that would take less memory if their fields were sorted
+    - maligned
+    # Go linter that checks if package imports are in a list of acceptable packages
+    - depguard
+    # Reports unused function parameters
+    - unparam
+    # Finds commonly misspelled English words in comments
+    - misspell
+    # Reports long lines
+    - lll
+    # Checks that no init functions are present in Go code
+    - gochecknoinits
+    # Checks that no globals are present in Go code
+    - gochecknoglobals
+    # Tool for detection of FIXME, TODO and other comment keywords
+    - godox
+    # Tool for detection of long functions
+    - funlen
+    # Tool for detection of leading and trailing whitespace
+    - whitespace
+    # Whitespace Linter - Forces you to use empty lines!
+    - wsl
+    # checks whether magic number is used
+    # isn't supported now
+    # - gomnd
+
+  # required linters are used by another config
+  disable:
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - gosimple
+    - structcheck
+    - varcheck
+    - ineffassign
+    - deadcode
+    - typecheck
+    - golint
+    - interfacer
+    - unconvert
+    - dupl
+    - goconst
+    - gofmt
+    - goimports
+    - dogsled
+    - nakedret
+    - prealloc
+    - scopelint
+    - gocritic
+  presets:
+    - bugs
+    - unused
+
+
+issues:
+
+  # Maximum issues count per one linter. Set to 0 to disable.
+  max-issues-per-linter: 0
+
+  # Maximum count of issues with the same text. Set to 0 to disable.
+  max-same-issues: 0
+
+  # Show only new issues
+  new: false

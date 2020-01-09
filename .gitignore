@@ -1,0 +1,11 @@
+*.lic
+*.tgz
+user_credentials/
+.Rhoc/
+*.exe
+private_keys/
+package-*/
+package-*.tar.gz
+lite-*.tar.gz
+tools/
+logs/
