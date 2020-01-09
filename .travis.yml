@@ -1,42 +1,36 @@
-image: Rhoc
+language: go
+
+go:
+- 1.13
+
+install:
+  - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/v1.22.2/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
 stages:
   - build
   - test
+  - test_required_linters
+  - test_optional_linters
 
-build_tags:
-  stage: build
-  script:
-    - make GOOS=linux
-    - make GOOS=windows
-    - make GOOS=darwin
-  only:
-    - tags
-  artifacts:
-    paths:
-      - package-*.tar.gz
-    expire_in: 1 yrs
-
-
-build:
-  stage: build
-  script:
-    - make bin
-  except:
-    - tags
-
-test:
-  stage: test
-  script:
-    - go test -coverprofile=coverage.out -mod=vendor ./cmd/... ./pkg/...
-    - go tool cover -func=coverage.out
-
-test_required_linters:
-  stage: test
-  script:
-    - golangci-lint run --config CI/golangci_required_linters.yml cmd/... pkg/...
-  
-test_optional_linters:
-  stage: test
-  script:
-    - golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
+jobs:
+  include:
+    - stage: build
+      install: skip
+      if: tag IS NOT present
+      script: make bin
+    - stage: build
+      install: skip
+      if: tag IS present
+      script: 
+        - make GOOS=linux
+        - make GOOS=windows
+        - make GOOS=darwin
+    - stage: test
+      install: skip
+      script:
+        - go test -coverprofile=coverage.out -mod=vendor ./cmd/... ./pkg/...
+        - go tool cover -func=coverage.out
+    - stage: test_required_linters
+      script: golangci-lint run --config CI/golangci_required_linters.yml cmd/... pkg/...
+    - stage: test_optional_linters
+      script: golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
