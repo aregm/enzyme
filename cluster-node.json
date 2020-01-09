@@ -1,0 +1,134 @@
+{
+    "variables": {
+        "ssh_socks_proxy_host": "",
+        "ssh_socks_proxy_port": "1080",
+        "image_name": "zyme-worker-node",
+        "project_name": "zyme-cluster",
+        "aws_region": "us-west-2",
+        "gcp_zone": "us-east1-b",
+        "user_name": "ec2-user",
+        "disk_size": "20",
+        "centos_release": "7.4.1708"
+    },
+
+    "builders": [
+        {
+            "type": "amazon-ebs",
+            "communicator": "ssh",
+            "ssh_proxy_host": "{{user `ssh_socks_proxy_host`}}",
+            "ssh_proxy_port": "{{user `ssh_socks_proxy_port`}}",
+            
+            "region": "{{user `aws_region`}}",
+            
+            "source_ami_filter": {
+                "filters": {
+                    "virtualization-type": "hvm",
+                    "name": "CentOS 7.4.1708 - HVM*",
+                    "root-device-type": "ebs"
+                },
+                "owners": "057448758665",
+                "most_recent": true
+            },
+            
+            "instance_type": "t2.micro",
+            "ssh_username": "{{user `user_name`}}",
+            "ami_name": "{{user `image_name`}}",
+            "ena_support": true,
+
+            "launch_block_device_mappings": [
+                {
+                    "device_name": "/dev/sda1",
+                    "volume_size": "{{user `disk_size`}}",
+                    "volume_type": "standard",
+                    "delete_on_termination": true
+                }
+            ],
+            
+            "force_deregister": true,
+            "force_delete_snapshot": true
+        },
+        {
+            "type": "googlecompute", 
+            "communicator": "ssh",
+            "ssh_proxy_host": "{{user `ssh_socks_proxy_host`}}",
+            "ssh_proxy_port": "{{user `ssh_socks_proxy_port`}}",
+            
+            "account_file": "tf_modules/providers/gcp/credentials.json",
+            "project_id": "{{user `project_name`}}",
+            
+            "zone": "{{user `gcp_zone`}}",
+            
+            "source_image": "centos-7-v20180104",
+            
+            "machine_type" : "f1-micro",
+            "ssh_username": "{{user `user_name`}}",
+            "image_name": "{{user `image_name`}}",
+            
+            "disk_size": "{{user `disk_size`}}",
+            "disk_type": "pd-standard"
+        }
+    ],
+
+    "provisioners": [
+        {
+            "type": "shell",
+            "inline": [ 
+                "sudo sed -i 's/^mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Base.repo",
+                "sudo sed -i 's/^#baseurl/baseurl/g' /etc/yum.repos.d/CentOS-Base.repo",
+                "sudo sed -i 's/mirror\\.centos/vault\\.centos/g' /etc/yum.repos.d/CentOS-Base.repo",
+                "echo '{{user `centos_release`}}' | sudo tee /etc/yum/vars/releasever"
+            ]
+        },
+        {
+            "type": "shell",
+            "script": "{{template_dir}}/preprocess/aws_preprocess.sh",
+            "environment_vars": ["USER_DISK_SIZE={{user `disk_size`}}"]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "mkdir -p ~/zyme-tools-distrib",
+                "mkdir -p ~/your-scripts"
+            ]
+        },
+        {
+            "type": "file",
+            "source": "{{template_dir}}/distrib/your-scripts/",
+            "destination": "~/your-scripts"
+        },
+        {
+            "type": "file",
+            "source": "{{template_dir}}/distrib/",
+            "destination": "~/zyme-tools-distrib"
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "sudo setenforce 0",
+                "sudo sed -i 's/^SELINUX.*/\\SELINUX=disabled/g' /etc/selinux/config",   
+                "sudo yum -y update",
+                "sudo yum install -y nfs-utils dos2unix perl tcsh tcl lshw vim gcc gcc-c++ libstdc++.i686",
+                "sudo yum install -y patch time libXcursor compat-libstdc++-33 nss-pam-ldapd openssl098e",
+                "sudo yum install -y libGL libGLU libICE libSM libXext libXft libXi libXt libXtst parted",
+                "sudo yum install -y libjpeg libpng12 libXrandr libXp libXmu libXinerama lsb",
+                "sudo sh -c \"echo 'SSF_VERSION=core-2016.0:compat-base-2016.0:hpc-cluster-2016.0:compat-hpc-2016.0' > /etc/ssf-release\"",
+                "echo export TMPDIR=/tmp >> ~/.bashrc",
+                "sudo setsebool -P use_nfs_home_dirs=true",
+                "chmod +x ~/zyme-tools-distrib/*.sh",
+                "dos2unix ~/zyme-tools-distrib/*.sh",
+                "~/zyme-tools-distrib/do_install.sh clck",
+                "~/zyme-tools-distrib/do_install.sh psxe_cluster_edition",
+                "rm -rf ~/zyme-tools-distrib"
+            ]
+        },
+        {
+            "type": "shell",
+            "inline": [
+                "chmod +x ~/your-scripts/*.sh",
+                "dos2unix ~/your-scripts/*.sh", 
+                "for s in ~/your-scripts/*;do [ -x $s ] && $s || : ;done",
+                "rm -rf ~/your-scripts"
+            ]
+        }
+    ]
+}

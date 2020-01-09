@@ -1,15 +1,31 @@
-# Binaries for programs and plugins
+proxy_ssh.state
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+tools/python.cmd
+tools/python
+*.pyc
+tools/pylib/
+tools/socks-proxy.txt
+zyme.cmd
+zyme
+.terraform.tfstate.lock.info
+*.pem
+*.pub
+*.ppk
+.zyme-proxy-cache
+.zyme-ssh-tunnel.state
 *.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Test binary, built with `go test -c`
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
-# Dependency directories (remove the comment below to include it)
-# vendor/
+tools/terraform
+tools/packer
+*.lic
+distrib/mpi/l_mpi_2018.1.163.tgz
+distrib/clck/l_clck_p_2019.0.015.tgz
+ec2_amazon-ebs.*
+variables.json
+variables.tfvars
+distrib/your-scripts/*.sh
+!distrib/your-scripts/dummy.sh
+user_defined.json
+credentials*
+distrib/psxe_cluster_edition/parallel_studio_xe_2018_update3_cluster_edition_online.tgz

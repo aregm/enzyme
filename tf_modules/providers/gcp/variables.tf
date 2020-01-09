@@ -1,0 +1,13 @@
+variable worker_count {}
+variable image_name {}
+variable region {}
+variable zone {}
+variable instance_type_login_node {}
+variable instance_type_worker_node {}
+variable key_name {}
+variable user_name {}
+variable public_key {}
+variable cluster_name {}
+variable project_name {}
+variable general_path_module {}
+variable login_node_root_size {}
