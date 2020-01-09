@@ -4,7 +4,7 @@
    1. [Overview](#overview)
    2. [Intro to HPC](#intro-to-HPC)
       1. [What we want](#what-we-want)
-      2. [Reasoning for moving HPC to cloud](#reasoning-for-moving-hpc-to-cloud)
+      2. [Reasoning for using HPC in the cloud](#reasoning-for-using-hpc-in-the-cloud)
    3.  [How the parameterization works](#how-the-parameterization-works)
    4. [Supported providers](#supported-providers)
 2.  [How to use Rhoc](#How-to-use-Rhoc) 
@@ -48,7 +48,7 @@ Intel HPC Platform Specification defines both software and hardware requirements
 
 - Provide one-click way of running personalized workload on the cloud HPC cluster.
 
-#### Reasoning for moving HPC to cloud
+#### Reasoning for using HPC in the cloud
 
 - The physical HPC cluster has maintenance costs (electricity, salaries, etc.). 
 - Cluster load is not uniform, it has peaks and falls, etc.
