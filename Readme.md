@@ -50,7 +50,6 @@ Intel HPC Platform Specification defines both software and hardware requirements
 
 #### Reasoning for using HPC in the cloud
 
-- The physical HPC cluster has maintenance costs (electricity, salaries, etc.). 
 - Cluster load is not uniform, it has peaks and falls, etc.
 - Lots of tasks need a small number of nodes, but they cannot run in parallel with one huge task that occupied the physical cluster.
 - Providing new tool for "HPC in the cloud" is useful for lowering barriers of entering in HPC (one does not need to buy and set up a cluster to start solving HPC tasks).
