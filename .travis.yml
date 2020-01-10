@@ -3,22 +3,6 @@ language: go
 go:
 - 1.13
 
-os:
-  - linux
-  - windows
-  - osx
-
-before_install:
-    - if [[ $TRAVIS_OS_NAME == "linux" ]]; then
-          export GOOS=linux; export DEPLOY_FILE=package-linux-amd64-.tar.gz;
-      fi;
-    - if [[ $TRAVIS_OS_NAME == "windows" ]]; then
-      export GOOS=windows; export DEPLOY_FILE=package-windows-amd64-.tar.gz;
-      fi;
-    - if [[ $TRAVIS_OS_NAME == "osx" ]]; then
-      export GOOS=darwin; export DEPLOY_FILE=package-darwin-amd64-.tar.gz;
-      fi;
-
 install:
   - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/v1.22.2/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
@@ -30,36 +14,67 @@ stages:
   - test_optional_linters
   - deploy
 
+build: &build
+  stage: build
+  install: skip
+  if: tag IS NOT present
+  script: make GOOS=$GOOS bin
+
+build_package: &build_package
+  stage: build_package
+  install: skip
+  if: tag IS present
+  script: make GOOS=$GOOS
+
+deploy: &deploy
+  stage: deploy
+  install: skip
+  if: tag IS present
+  deploy:
+    - provider: releases
+      api_key:
+        secure: $GITHUB_API_KEY
+      file: $DEPLOY_FILE
+      skip_cleanup: true
+
 jobs:
   include:
-    - stage: build
-      install: skip
-      os:
-        - linux
-        - windows
-        - osx
-      if: tag IS NOT present
-      script: make GOOS=$GOOS bin
-      
-    - stage: build_package
-      install: skip
-      os:
-        - linux
-        - windows
-        - osx
-      if: tag IS present
-      script: 
-        - make GOOS=$GOOS
+    - <<: *build
+      env:
+        - GOOS=linux
+      os: linux
+    
+    - <<: *build
+      env:
+        - GOOS=windows
+      os: windows
+
+    - <<: *build
+      env:
+        - GOOS=darwin
+      os: osx
+
+    - <<: *build_package
+      env:
+        - GOOS=linux
+      os: linux
+
+    - <<: *build_package
+      env:
+        - GOOS=windows
+      os: windows
+
+    - <<: *build_package
+      env:
+        - GOOS=darwin
+      os: osx
 
     - stage: test
       install: skip
-      os:
-        - linux
-        - windows
-        - osx
       script:
         - go test -coverprofile=coverage.out -mod=vendor ./cmd/... ./pkg/...
         - go tool cover -func=coverage.out
+      os: linux
 
     - stage: test_required_linters
       script: golangci-lint run --config CI/golangci_required_linters.yml cmd/... pkg/...
@@ -69,16 +84,20 @@ jobs:
       script: golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
       os: linux
 
-    - stage: deploy
-      install: skip
-      os:
-        - linux
-        - windows
-        - osx
-      if: tag IS present
-      deploy:
-        - provider: releases
-          api_key:
-            secure: $GITHUB_API_KEY
-          file: $DEPLOY_FILE
-          skip_cleanup: true
+    - <<: *deploy
+      env:
+        - GOOS=linux
+        - DEPLOY_FILE=package-linux-amd64-.tar.gz
+      os: linux
+
+    - <<: *deploy
+      env:
+        - GOOS=windows
+        - DEPLOY_FILE=package-windows-amd64-.tar.gz
+      os: windows
+
+    - <<: *deploy
+      env:
+        - GOOS=darwin
+        - DEPLOY_FILE=package-darwin-amd64-.tar.gz
+      os: darwin
