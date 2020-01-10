@@ -48,7 +48,7 @@ func TestLazyFile(t *testing.T) {
 	testFileNamePrefix := filepath.Join(os.TempDir(), "TestLazyFile")
 	testFileContent := []byte("test lazy file content")
 
-	lzFile := &lazyFile{out: nil, name: "", prefix: testFileNamePrefix}
+	lzFile := &lazyFile{prefix: testFileNamePrefix}
 
 	writtenBytes, err := lzFile.Write(testFileContent)
 	if err != nil {

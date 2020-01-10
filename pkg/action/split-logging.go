@@ -137,7 +137,7 @@ func InitLogging(verbose bool) {
 	}
 
 	mainLogPrefix := storage.MakeStorageFilename(storage.LogCategory, []string{"Rhoc"}, "")
-	lazyLog := &lazyFile{out: nil, prefix: mainLogPrefix}
+	lazyLog := &lazyFile{prefix: mainLogPrefix}
 
 	log.RegisterExitHandler(func() {
 		lazyLog.Close()
