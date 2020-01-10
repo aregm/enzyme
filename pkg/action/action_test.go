@@ -29,7 +29,7 @@ func TestMakeLogWriter(t *testing.T) {
 	readContent, err := ioutil.ReadFile(logName)
 
 	if err != nil {
-		t.Errorf("while trying to read from the log file occurrated error: [%s]", err)
+		t.Errorf("error occurred while trying to read from the log file: [%s]", err)
 	}
 
 	if equal := reflect.DeepEqual(readContent, testFileContent); equal != true {
