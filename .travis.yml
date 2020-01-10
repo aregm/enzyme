@@ -58,6 +58,7 @@ jobs:
       script: golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
 
     - stage: deploy
+      if: tag IS present
       deploy:
         - provider: releases
           api_key:
