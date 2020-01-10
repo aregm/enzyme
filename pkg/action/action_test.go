@@ -9,7 +9,7 @@ import (
 )
 
 func TestMakeLogWriter(t *testing.T) {
-	testFileName := filepath.Join(os.TempDir(), "TestMakeLogWriter")
+	testFileNamePrefix := filepath.Join(os.TempDir(), "TestMakeLogWriter")
 	testFileContent := []byte("test makeLogWriter content")
 
 	logName, logFile, err := makeLogWriter(testFileName)
