@@ -12,10 +12,11 @@ func TestMakeLogWriter(t *testing.T) {
 	testFileNamePrefix := filepath.Join(os.TempDir(), "TestMakeLogWriter")
 	testFileContent := []byte("test makeLogWriter content")
 
-	logName, logFile, err := makeLogWriter(testFileName)
+	logName, logFile, err := makeLogWriter(testFileNamePrefix)
 	if err != nil {
 		t.Errorf("makeLogWriter function returned error: [%s]", err)
 	}
+	defer logFile.Close()
 
 	n, err := logFile.Write(testFileContent)
 	if err != nil {
