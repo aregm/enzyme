@@ -3,31 +3,28 @@ language: go
 go:
 - 1.13
 
-matrix:
-  include:
-    - os: linux
-      env: 
-        - DEPLOY_FILE=package-linux-amd64-.tar.gz
-        - GOOS=linux
-    - os: windows
-      env: 
-        - DEPLOY_FILE=package-windows-amd64-.tar.gz
-        - GOOS=windows
-    - os: osx
-      env: 
-        - DEPLOY_FILE=package-darwin-amd64-.tar.gz
-        - GOOS=darwin
-
 os:
   - linux
   - windows
   - osx
+
+before_install:
+    - if [[ $TRAVIS_OS_NAME == "linux" ]]; then
+          export GOOS=linux; export DEPLOY_FILE=package-linux-amd64-.tar.gz;
+      fi;
+    - if [[ $TRAVIS_OS_NAME == "windows" ]]; then
+      export GOOS=windows; export DEPLOY_FILE=package-windows-amd64-.tar.gz;
+      fi;
+    - if [[ $TRAVIS_OS_NAME == "osx" ]]; then
+      export GOOS=darwin; export DEPLOY_FILE=package-darwin-amd64-.tar.gz;
+      fi;
 
 install:
   - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/v1.22.2/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
 stages:
   - build
+  - build_package
   - test
   - test_required_linters
   - test_optional_linters
@@ -37,27 +34,47 @@ jobs:
   include:
     - stage: build
       install: skip
+      os:
+        - linux
+        - windows
+        - osx
       if: tag IS NOT present
-      script: make bin
-    - stage: build
+      script: make GOOS=$GOOS bin
+      
+    - stage: build_package
       install: skip
+      os:
+        - linux
+        - windows
+        - osx
       if: tag IS present
       script: 
         - make GOOS=$GOOS
 
     - stage: test
       install: skip
+      os:
+        - linux
+        - windows
+        - osx
       script:
         - go test -coverprofile=coverage.out -mod=vendor ./cmd/... ./pkg/...
         - go tool cover -func=coverage.out
 
     - stage: test_required_linters
       script: golangci-lint run --config CI/golangci_required_linters.yml cmd/... pkg/...
+      os: linux
 
     - stage: test_optional_linters
       script: golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
+      os: linux
 
     - stage: deploy
+      install: skip
+      os:
+        - linux
+        - windows
+        - osx
       if: tag IS present
       deploy:
         - provider: releases
