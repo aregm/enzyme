@@ -24,7 +24,7 @@ func TestMakeLogWriter(t *testing.T) {
 	}
 
 	if n != len(testFileContent) {
-		t.Errorf("unexpected written bytes count: [%d], expected: [%d]", n, len(testFileContent))
+		t.Errorf("unexpected written bytes count: %d, expected: %d", n, len(testFileContent))
 	}
 
 	readContent, err := ioutil.ReadFile(logName)
