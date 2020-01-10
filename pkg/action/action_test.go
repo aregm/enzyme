@@ -20,11 +20,11 @@ func TestMakeLogWriter(t *testing.T) {
 
 	n, err := logFile.Write(testFileContent)
 	if err != nil {
-		t.Errorf("while trying to write to the log file occurrated error: [%s]", err)
+		t.Errorf("error occurred while trying to write to the log file: [%s]", err)
 	}
 
 	if n != len(testFileContent) {
-		t.Errorf("unexpected written bytes count: %d, expected: %d", n, len(testFileContent))
+		t.Errorf("unexpected written bytes count: [%d], expected: [%d]", n, len(testFileContent))
 	}
 
 	readContent, err := ioutil.ReadFile(logName)
@@ -37,6 +37,10 @@ func TestMakeLogWriter(t *testing.T) {
 		t.Errorf("recorded content does not match read content")
 	}
 
+	// still need to close explicitly instead of relying on defer so os.Remove succeeds
 	logFile.Close()
-	os.Remove(logName)
+
+	if err = os.Remove(logName); err != nil {
+		t.Errorf("error deleting file; file: [%s], error: [%s]", logName, err)
+	}
 }
