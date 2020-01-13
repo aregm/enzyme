@@ -15,30 +15,27 @@ stages:
   - test
   - test_required_linters
   - test_optional_linters
-  - deploy
 
 build: &build
   stage: build
   install: skip
   if: tag IS NOT present
-  script: make GOOS=$GOOS bin
+  script: make GOOS=$(go env GOOS) bin
 
 build_package: &build_package
   stage: build_package
   install: skip
   if: tag IS present
-  script: make GOOS=$GOOS
-
-deploy: &deploy
-  stage: deploy
-  install: skip
-  if: tag IS present
+  script: make GOOS=$(go env GOOS)
   deploy:
     - provider: releases
-      api_key:
+      token:
         secure: $GITHUB_API_KEY
-      file: $DEPLOY_FILE
+      file_glob: true
+      file: package-*.tar.gz
       skip_cleanup: true
+      on:
+        all_branches: true
 
 jobs:
   include:
@@ -86,21 +83,3 @@ jobs:
     - stage: test_optional_linters
       script: golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
       os: linux
-
-    - <<: *deploy
-      env:
-        - GOOS=linux
-        - DEPLOY_FILE=package-linux-amd64-.tar.gz
-      os: linux
-
-    - <<: *deploy
-      env:
-        - GOOS=windows
-        - DEPLOY_FILE=package-windows-amd64-.tar.gz
-      os: windows
-
-    - <<: *deploy
-      env:
-        - GOOS=darwin
-        - DEPLOY_FILE=package-darwin-amd64-.tar.gz
-      os: darwin
