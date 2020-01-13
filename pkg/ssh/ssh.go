@@ -23,6 +23,7 @@ type ZymeClient interface {
 	ExecuteCommand(command string, getOutput bool) error
 	Equals(other ZymeClient) bool
 	Split(path string) (dir, file string)
+	Chmod(path string, mode os.FileMode) error
 }
 
 // MakeZymeClient establishes SSH connection between server and client;
@@ -348,6 +349,29 @@ func (client *zymeClient) ExecuteCommand(command string, getOutput bool) error {
 	}
 
 	return session.Run(command)
+}
+
+func (client *zymeClient) Chmod(path string, mode os.FileMode) error {
+	sftpClient, err := sftp.NewClient(client.internalClient)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"client": client.internalClient,
+		}).Errorf("zymeClient.Chmod: %s", err)
+
+		return err
+	}
+	defer sftpClient.Close()
+
+	if err := sftpClient.Chmod(path, mode); err != nil {
+		log.WithFields(log.Fields{
+			"path": path,
+			"mode": mode,
+		}).Errorf("zymeClient.Chmod: %s", err)
+
+		return err
+	}
+
+	return nil
 }
 
 func (client *zymeClient) Split(path string) (dir, file string) {

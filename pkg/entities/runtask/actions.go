@@ -3,6 +3,7 @@ package runtask
 import (
 	"fmt"
 	"net"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -226,9 +227,7 @@ func (action *uploadData) Apply() error {
 		return err
 	}
 
-	// TODO: use sftp.Chmod() instead
-	if err :=
-		runRemoteCommand(action.task.client, logger, "chmod", "+x", action.task.remotePath); err != nil {
+	if err := action.task.client.Chmod(action.task.remotePath, os.ModePerm); err != nil {
 		logger.Errorf("RunTask.uploadData: cannot make remote script executable: %s", err)
 		return err
 	}
