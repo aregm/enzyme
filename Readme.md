@@ -73,16 +73,6 @@ For [Google Cloud Platform](https://cloud.google.com/iam/docs/creating-managing-
 
 and put it into any folder (e.g. `user_credentials/gcp/gcp_credentials.json`). 
 
-#### Intel software
-
-You will need the following distributions: [Intel® Cluster Checker](https://software.intel.com/en-us/cluster-checker) (version: 2019 initial release) and [Intel® Parallel Studio XE Cluster Edition](https://software.intel.com/en-us/parallel-studio-xe) (version: 2018 update 3). Download and get licenses.
-
-1. Put Parallel Studio XE Cluster Edition and its license into the `distrib/psxe_cluster_edition` folder.
-
-2. Put the Cluster Checker distribution into the `distrib/clck` folder.
-
-   **NOTICE**: *The names of distributions should end with `.tgz`. If they do not, rename them.*
-
 #### Other required software
 
 You need to install:
