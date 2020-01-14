@@ -247,7 +247,13 @@ func (client *zymeClient) PutFile(localPath, remotePath string, newlineConversio
 	}
 
 	if makeExecutable {
-		makeFileExecutable(*client, remotePath)
+		if err := makeFileExecutable(*client, remotePath); err != nil {
+			log.WithFields(log.Fields{
+				"remotePath": remotePath,
+			}).Errorf("zymeClient.PutFile: cannot make file '%s' executable: %s", remotePath, err)
+
+			return err
+		}
 	}
 
 	return nil
@@ -364,7 +370,7 @@ func makeFileExecutable(client zymeClient, path string) error {
 	if err != nil {
 		log.WithFields(log.Fields{
 			"client": client.internalClient,
-		}).Errorf("ssh.makeFileExecutable: %s", err)
+		}).Errorf("ssh.makeFileExecutable: cannot create SSH client: %s", err)
 
 		return err
 	}
@@ -375,7 +381,7 @@ func makeFileExecutable(client zymeClient, path string) error {
 		log.WithFields(log.Fields{
 			"sftpClient": sftpClient,
 			"path":       path,
-		}).Errorf("ssh.makeFileExecutable: %s", err)
+		}).Errorf("ssh.makeFileExecutable: cannot stat '%s': %s", path, err)
 
 		return err
 	}
@@ -386,7 +392,7 @@ func makeFileExecutable(client zymeClient, path string) error {
 			"sftpClient": sftpClient,
 			"path":       path,
 			"mode":       fileModeX,
-		}).Errorf("ssh.makeFileExecutable: %s", err)
+		}).Errorf("ssh.makeFileExecutable: cannot set executable bit on '%s': %s", path, err)
 
 		return err
 	}
