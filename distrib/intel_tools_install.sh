@@ -9,6 +9,4 @@ sudo yum-config-manager --add-repo https://yum.repos.intel.com/mkl/setup/intel-m
 
 sudo rpm --import https://yum.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2019.PUB
 
-sudo yum install -y intel-clck-2019.6-038
-sudo yum install -y intel-mpi-2019.5-075
-sudo yum install -y intel-mkl-2019.5-075
+sudo yum install -y intel-clck-2019.5-030 intel-mpi-2019.5-075 intel-mkl-2019.5-075
