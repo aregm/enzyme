@@ -1,42 +1,85 @@
-image: Rhoc
+language: go
+
+go:
+- 1.13
+
+before_install:
+  - if [ "$TRAVIS_OS_NAME" = "windows" ]; then choco install make; fi
+
+install:
+  - curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/v1.22.2/install.sh | sh -s -- -b $(go env GOPATH)/bin
 
 stages:
   - build
+  - build_package
   - test
+  - test_required_linters
+  - test_optional_linters
 
-build_tags:
+build: &build
   stage: build
-  script:
-    - make GOOS=linux
-    - make GOOS=windows
-    - make GOOS=darwin
-  only:
-    - tags
-  artifacts:
-    paths:
-      - package-*.tar.gz
-    expire_in: 1 yrs
+  install: skip
+  if: tag IS NOT present
+  script: make GOOS=$(go env GOOS) bin
 
+build_package: &build_package
+  stage: build_package
+  install: skip
+  if: tag IS present
+  script: make GOOS=$(go env GOOS)
+  deploy:
+    - provider: releases
+      token:
+        secure: $GITHUB_API_KEY
+      file_glob: true
+      file: package-*.tar.gz
+      skip_cleanup: true
+      on:
+        all_branches: true
 
-build:
-  stage: build
-  script:
-    - make bin
-  except:
-    - tags
+jobs:
+  include:
+    - <<: *build
+      env:
+        - GOOS=linux
+      os: linux
+    
+    - <<: *build
+      env:
+        - GOOS=windows
+      os: windows
 
-test:
-  stage: test
-  script:
-    - go test -coverprofile=coverage.out -mod=vendor ./cmd/... ./pkg/...
-    - go tool cover -func=coverage.out
+    - <<: *build
+      env:
+        - GOOS=darwin
+      os: osx
 
-test_required_linters:
-  stage: test
-  script:
-    - golangci-lint run --config CI/golangci_required_linters.yml cmd/... pkg/...
-  
-test_optional_linters:
-  stage: test
-  script:
-    - golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
+    - <<: *build_package
+      env:
+        - GOOS=linux
+      os: linux
+
+    - <<: *build_package
+      env:
+        - GOOS=windows
+      os: windows
+
+    - <<: *build_package
+      env:
+        - GOOS=darwin
+      os: osx
+
+    - stage: test
+      install: skip
+      script:
+        - go test -coverprofile=coverage.out -mod=vendor ./cmd/... ./pkg/...
+        - go tool cover -func=coverage.out
+      os: linux
+
+    - stage: test_required_linters
+      script: golangci-lint run --config CI/golangci_required_linters.yml cmd/... pkg/...
+      os: linux
+
+    - stage: test_optional_linters
+      script: golangci-lint run --config CI/golangci_optional_linters.yml cmd/... pkg/...
+      os: linux

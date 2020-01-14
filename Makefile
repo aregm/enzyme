@@ -40,7 +40,7 @@ bin:
 package: bin $(PACKER_EXE) $(TERRAFORM_EXE)
 	@echo Preparing package
 	@rm -rf $(PKG_DIR)/distrib/ $(PKG_DIR)/postprocess/ $(PKG_DIR)/templates/ $(PKG_DIR)/examples/
-	@cp -R $(CURDIR)/distrib/ $(CURDIR)/postprocess/ $(CURDIR)/templates/ $(CURDIR)/examples/ --target-directory=$(PKG_DIR)
+	@cp -R $(CURDIR)/distrib/ $(CURDIR)/postprocess/ $(CURDIR)/templates/ $(CURDIR)/examples/ $(PKG_DIR)
 
 $(ARC_FILE): package
 	@echo Making package $(ARC_FILE)
