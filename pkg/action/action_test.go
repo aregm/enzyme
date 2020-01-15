@@ -103,7 +103,7 @@ func TestRunLoggedCmdDirOutput(t *testing.T) {
 	}
 
 	content := buffer.String()
-	expectedBufferContent := "go version go1.13.3 windows/amd64"
+	expectedBufferContent := "go version"
 	expectedLogFileContent := "Rhoc: running command: go version"
 
 	if strings.HasPrefix(content, expectedBufferContent) != true {
@@ -116,16 +116,29 @@ func TestRunLoggedCmdDirOutput(t *testing.T) {
 	}
 
 	if strings.HasPrefix(string(logContent), expectedLogFileContent) != true {
-		t.Errorf("recorded content: [%s] does not match read content: [%s]", content, expectedBufferContent)
+		t.Errorf("recorded content: [%s] does not match read content: [%s]", logContent, expectedLogFileContent)
 	}
 
-	logName2, err := RunLoggedCmd(testLogFilePrefix, name, arg)
+}
+
+func TestLoggedCmd(t *testing.T) {
+	testLogFilePrefix := filepath.Join(os.TempDir(), "TestRunLoggedCmdDirOutput")
+	name := "go"
+	arg := "version"
+
+	logName, err := RunLoggedCmd(testLogFilePrefix, name, arg)
 	if err != nil {
 		t.Errorf("error occurred while trying to run command: [%s %s], error: [%s]", name, arg, err)
 	}
 
-	if logName != logName2 {
-		t.Errorf("something went wrong")
+	logContent, err := ioutil.ReadFile(logName)
+	if err != nil {
+		t.Errorf("error occurred while trying to read from the log file: [%s]", err)
+	}
+	expectedLogFileContent := "Rhoc: running command: go version"
+
+	if strings.HasPrefix(string(logContent), expectedLogFileContent) != true {
+		t.Errorf("recorded content: [%s] does not match read content: [%s]", logContent, expectedLogFileContent)
 	}
 
 }
