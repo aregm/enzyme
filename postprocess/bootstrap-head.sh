@@ -21,8 +21,8 @@ shift
 
 cat <<'EOF' >~/clck/cluster_checker.sh
 #!/bin/sh
-source /opt/intel/clck/2019.0/bin/clckvars.sh
-/opt/intel/clck/2019.0/bin/intel64/clck -f ~/clck/nodefile -F ssf_compat-hpc-2016.0 -o ~/clck/clck_results.log
+source /opt/intel/clck/2019.6/bin/clckvars.sh
+/opt/intel/clck/2019.6/bin/intel64/clck -f ~/clck/nodefile -F ssf_compat-hpc-2016.0 -o ~/clck/clck_results.log
 EOF
 
 chmod +x ~/clck/*.sh
