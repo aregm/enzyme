@@ -20,13 +20,13 @@ build: &build
   stage: build
   install: skip
   if: tag IS NOT present
-  script: make GOOS=$(go env GOOS) bin
+  script: make bin
 
 build_package: &build_package
   stage: build_package
   install: skip
   if: tag IS present
-  script: make GOOS=$(go env GOOS)
+  script: make
   deploy:
     - provider: releases
       token:
@@ -40,33 +40,21 @@ build_package: &build_package
 jobs:
   include:
     - <<: *build
-      env:
-        - GOOS=linux
       os: linux
     
     - <<: *build
-      env:
-        - GOOS=windows
       os: windows
 
     - <<: *build
-      env:
-        - GOOS=darwin
       os: osx
 
     - <<: *build_package
-      env:
-        - GOOS=linux
       os: linux
 
     - <<: *build_package
-      env:
-        - GOOS=windows
       os: windows
 
     - <<: *build_package
-      env:
-        - GOOS=darwin
       os: osx
 
     - stage: test
