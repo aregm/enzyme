@@ -18,7 +18,7 @@ import (
 // ZymeClient is base interface for ssh package.
 type ZymeClient interface {
 	Close()
-	PutFile(localPath, remotePath string, newlineConversion, overwrite bool) error
+	PutFile(localPath, remotePath string, newlineConversion, overwrite bool, makeExecutable bool) error
 	GetFile(localPath, remotePath string, overwrite bool) error
 	ExecuteCommand(command string, getOutput bool) error
 	Equals(other ZymeClient) bool
@@ -146,7 +146,8 @@ func (client *zymeClient) Close() {
 	client.internalClient.Close()
 }
 
-func (client *zymeClient) PutFile(localPath, remotePath string, newlineConversion, overwrite bool) error {
+func (client *zymeClient) PutFile(localPath, remotePath string, newlineConversion, overwrite bool,
+	makeExecutable bool) error {
 	// open an SFTP session over an existing ssh connection.
 	sftpClient, err := sftp.NewClient(client.internalClient)
 	if err != nil {
@@ -242,6 +243,16 @@ func (client *zymeClient) PutFile(localPath, remotePath string, newlineConversio
 
 				return err
 			}
+		}
+	}
+
+	if makeExecutable {
+		if err := makeFileExecutable(*client, remotePath); err != nil {
+			log.WithFields(log.Fields{
+				"remotePath": remotePath,
+			}).Errorf("zymeClient.PutFile: cannot make file '%s' executable: %s", remotePath, err)
+
+			return err
 		}
 	}
 
@@ -352,4 +363,39 @@ func (client *zymeClient) ExecuteCommand(command string, getOutput bool) error {
 
 func (client *zymeClient) Split(path string) (dir, file string) {
 	return sftp.Split(path)
+}
+
+func makeFileExecutable(client zymeClient, path string) error {
+	sftpClient, err := sftp.NewClient(client.internalClient)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"client": client.internalClient,
+		}).Errorf("ssh.makeFileExecutable: cannot create SSH client: %s", err)
+
+		return err
+	}
+	defer sftpClient.Close()
+
+	fileInfo, err := sftpClient.Stat(path)
+	if err != nil {
+		log.WithFields(log.Fields{
+			"sftpClient": sftpClient,
+			"path":       path,
+		}).Errorf("ssh.makeFileExecutable: cannot stat '%s': %s", path, err)
+
+		return err
+	}
+
+	fileModeX := fileInfo.Mode() | 0111
+	if err := sftpClient.Chmod(path, fileModeX); err != nil {
+		log.WithFields(log.Fields{
+			"sftpClient": sftpClient,
+			"path":       path,
+			"mode":       fileModeX,
+		}).Errorf("ssh.makeFileExecutable: cannot set executable bit on '%s': %s", path, err)
+
+		return err
+	}
+
+	return nil
 }

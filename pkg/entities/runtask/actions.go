@@ -212,7 +212,7 @@ func (action *uploadData) Apply() error {
 		action.stage.Set(fmt.Sprintf(":uploading %s", localName))
 
 		if err :=
-			action.task.client.PutFile(localFilePath, remoteName, false, action.task.overwrite); err != nil {
+			action.task.client.PutFile(localFilePath, remoteName, false, action.task.overwrite, false); err != nil {
 			logger.Errorf("RunTask.uploadData: cannot upload local file %s: %s", localFilePath, err)
 			return err
 		}
@@ -221,15 +221,8 @@ func (action *uploadData) Apply() error {
 	action.stage.Reset()
 
 	if err := action.task.client.PutFile(action.task.localPath, action.task.remotePath,
-		action.task.convertNewline, action.task.overwrite); err != nil {
+		action.task.convertNewline, action.task.overwrite, true); err != nil {
 		logger.Errorf("RunTask.uploadData: cannot upload local script: %s", err)
-		return err
-	}
-
-	// TODO: use sftp.Chmod() instead
-	if err :=
-		runRemoteCommand(action.task.client, logger, "chmod", "+x", action.task.remotePath); err != nil {
-		logger.Errorf("RunTask.uploadData: cannot make remote script executable: %s", err)
 		return err
 	}
 
