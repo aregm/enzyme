@@ -1,4 +1,4 @@
-package action
+package logging
 
 import (
 	"io"
@@ -13,7 +13,7 @@ type lazyFile struct {
 
 func (lw *lazyFile) Write(p []byte) (int, error) {
 	if lw.out == nil {
-		fileName, out, err := makeLogWriter(lw.prefix)
+		fileName, out, err := MakeLogWriter(lw.prefix)
 		if err != nil {
 			return 0, err
 		}

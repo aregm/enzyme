@@ -1,4 +1,4 @@
-package action
+package logging
 
 import (
 	"fmt"
@@ -14,10 +14,10 @@ import (
 )
 
 var (
-	logWriter  *io.PipeWriter
+	LogWriter  *io.PipeWriter
 	logExt     string = ".log"
 	timeLayout string = "2006-01-02-15-04-05"
-	repeatLogs bool   = false
+	RepeatLogs bool   = false
 )
 
 type textHook struct {
@@ -124,8 +124,8 @@ func addHook(minlevel log.Level, maxlevel log.Level, out io.Writer) {
 // InitLogging sets up logging, including the one for external actions launched via commands
 func InitLogging(verbose bool) {
 	logger := log.StandardLogger()
-	logWriter = logger.WriterLevel(log.InfoLevel)
-	repeatLogs = verbose
+	LogWriter = logger.WriterLevel(log.InfoLevel)
+	RepeatLogs = verbose
 
 	log.SetOutput(ioutil.Discard)
 
@@ -153,9 +153,9 @@ func InitLogging(verbose bool) {
 	log.SetLevel(log.TraceLevel)
 }
 
-// makeLogWriter creates a logfile name based on prefix and current datetime,
+// MakeLogWriter creates a logfile name based on prefix and current datetime,
 // creates the directory for it and opens it for writing
-func makeLogWriter(logfilePrefix string) (string, io.WriteCloser, error) {
+func MakeLogWriter(logfilePrefix string) (string, io.WriteCloser, error) {
 	if logfilePrefix == "" {
 		return "", nil, fmt.Errorf("requested to make empty logfile name")
 	}
