@@ -14,11 +14,21 @@ import (
 )
 
 var (
-	LogWriter  *io.PipeWriter
+	logWriter  *io.PipeWriter
 	logExt     string = ".log"
 	timeLayout string = "2006-01-02-15-04-05"
-	RepeatLogs bool   = false
+	repeatLogs bool   = false
 )
+
+// GetLogWriter gives access to `logWriter` without the possibility of changing it
+func GetLogWriter() io.PipeWriter {
+	return *logWriter
+}
+
+// GetRepeatLogs gives access to `repeatLogs` without the possibility of changing it
+func GetRepeatLogs() bool {
+	return repeatLogs
+}
 
 type textHook struct {
 	out    io.Writer
@@ -124,8 +134,8 @@ func addHook(minlevel log.Level, maxlevel log.Level, out io.Writer) {
 // InitLogging sets up logging, including the one for external actions launched via commands
 func InitLogging(verbose bool) {
 	logger := log.StandardLogger()
-	LogWriter = logger.WriterLevel(log.InfoLevel)
-	RepeatLogs = verbose
+	logWriter = logger.WriterLevel(log.InfoLevel)
+	repeatLogs = verbose
 
 	log.SetOutput(ioutil.Discard)
 

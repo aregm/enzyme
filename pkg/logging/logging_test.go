@@ -62,7 +62,7 @@ func TestIsatty(t *testing.T) {
 	if tty := isatty(writer); tty != false {
 		t.Errorf("PipeWriter is not terminal; isatty should return false")
 	}
-	defer writer.Close()
+	writer.Close()
 }
 
 func TestMakeLogWriter(t *testing.T) {

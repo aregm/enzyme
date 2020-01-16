@@ -33,7 +33,8 @@ func RunLoggedCmdDirOutput(logfilePrefix string, workDir string, output io.Write
 	if err != nil {
 		log.Warnf("RunLoggedCmdDirOutput: cannot redirect log to file: %s, using default log instead", err)
 
-		cmdLog = logging.LogWriter
+		logWriter := logging.GetLogWriter()
+		cmdLog = &logWriter
 	} else {
 		logStr := fmt.Sprintf("Rhoc: running command: %s %s\n-----\n\n", name, strings.Join(args, " "))
 		if n, err := io.WriteString(cmdLogfile, logStr); err != nil {
@@ -50,13 +51,13 @@ func RunLoggedCmdDirOutput(logfilePrefix string, workDir string, output io.Write
 	switch {
 	case output != nil:
 		cmdOut = io.MultiWriter(output, cmdLog)
-	case logging.RepeatLogs:
+	case logging.GetRepeatLogs():
 		cmdOut = io.MultiWriter(os.Stdout, cmdLog)
 	default:
 		cmdOut = cmdLog
 	}
 
-	if logging.RepeatLogs {
+	if logging.GetRepeatLogs() {
 		cmdErr = io.MultiWriter(os.Stderr, cmdLog)
 	} else {
 		cmdErr = cmdLog
