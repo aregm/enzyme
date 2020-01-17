@@ -8,6 +8,8 @@ import (
 	"strings"
 
 	log "github.com/sirupsen/logrus"
+
+	"Rhoc/pkg/logging"
 )
 
 // RunLoggedCmd executes the program <name> in current working directory
@@ -27,11 +29,11 @@ func RunLoggedCmdDirOutput(logfilePrefix string, workDir string, output io.Write
 	args ...string) (string, error) {
 	var cmdLog io.Writer
 
-	logname, cmdLogfile, err := makeLogWriter(logfilePrefix)
+	logname, cmdLogfile, err := logging.MakeLogWriter(logfilePrefix)
 	if err != nil {
 		log.Warnf("RunLoggedCmdDirOutput: cannot redirect log to file: %s, using default log instead", err)
 
-		cmdLog = logWriter
+		cmdLog = logging.GetLogWriter()
 	} else {
 		logStr := fmt.Sprintf("Rhoc: running command: %s %s\n-----\n\n", name, strings.Join(args, " "))
 		if n, err := io.WriteString(cmdLogfile, logStr); err != nil {
@@ -48,13 +50,13 @@ func RunLoggedCmdDirOutput(logfilePrefix string, workDir string, output io.Write
 	switch {
 	case output != nil:
 		cmdOut = io.MultiWriter(output, cmdLog)
-	case repeatLogs:
+	case logging.GetRepeatLogs():
 		cmdOut = io.MultiWriter(os.Stdout, cmdLog)
 	default:
 		cmdOut = cmdLog
 	}
 
-	if repeatLogs {
+	if logging.GetRepeatLogs() {
 		cmdErr = io.MultiWriter(os.Stderr, cmdLog)
 	} else {
 		cmdErr = cmdLog

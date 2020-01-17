@@ -1,4 +1,4 @@
-package action
+package logging
 
 import (
 	"fmt"
@@ -19,6 +19,19 @@ var (
 	timeLayout string = "2006-01-02-15-04-05"
 	repeatLogs bool   = false
 )
+
+// GetLogWriter gives access to `logWriter` without the possibility of changing it
+func GetLogWriter() io.Writer {
+	// explicit copy
+	logger := *logWriter
+
+	return &logger
+}
+
+// GetRepeatLogs gives access to `repeatLogs` without the possibility of changing it
+func GetRepeatLogs() bool {
+	return repeatLogs
+}
 
 type textHook struct {
 	out    io.Writer
@@ -153,9 +166,9 @@ func InitLogging(verbose bool) {
 	log.SetLevel(log.TraceLevel)
 }
 
-// makeLogWriter creates a logfile name based on prefix and current datetime,
+// MakeLogWriter creates a logfile name based on prefix and current datetime,
 // creates the directory for it and opens it for writing
-func makeLogWriter(logfilePrefix string) (string, io.WriteCloser, error) {
+func MakeLogWriter(logfilePrefix string) (string, io.WriteCloser, error) {
 	if logfilePrefix == "" {
 		return "", nil, fmt.Errorf("requested to make empty logfile name")
 	}

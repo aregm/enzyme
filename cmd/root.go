@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"Rhoc/pkg/action"
+	"Rhoc/pkg/logging"
 	"Rhoc/pkg/provider"
 	"Rhoc/pkg/state"
 )
@@ -47,7 +47,7 @@ func initRhoc() {
 		log.SetLevel(log.WarnLevel)
 	}
 
-	action.InitLogging(verbose)
+	logging.InitLogging(verbose)
 	provider.InitTools()
 
 	if simulate {
