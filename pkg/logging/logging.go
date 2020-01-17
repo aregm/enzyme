@@ -21,8 +21,11 @@ var (
 )
 
 // GetLogWriter gives access to `logWriter` without the possibility of changing it
-func GetLogWriter() io.PipeWriter {
-	return *logWriter
+func GetLogWriter() io.Writer {
+	// explicit copy
+	logger := *logWriter
+
+	return &logger
 }
 
 // GetRepeatLogs gives access to `repeatLogs` without the possibility of changing it
