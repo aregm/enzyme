@@ -1,13 +1,14 @@
 name: Rhoc
-on: [push]
+on:
+  push:
+    tags: '*'
 jobs:
   deploy:
-    name: Build
+    name: Deploy
     strategy:
       matrix:
         os: [ubuntu-18.04, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
-    needs: [test, lint]
     steps:
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
@@ -20,3 +21,22 @@ jobs:
 
     - name: Build
       run: make
+    
+    - name: Create release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false    
+    
+    - name: Upload
+      uses: actions/upload-release-asset@v1.0.1
+      with:
+        # The URL for uploading assets to the release
+        upload_url: $ {{ steps.create_release.outputs.upload_url }}
+        asset_path: ./package-linux-amd64.tar.gz
+        asset_name: package-linux-amd64.tar.gz
+        asset_content_type: application/zip
