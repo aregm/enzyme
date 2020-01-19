@@ -35,6 +35,5 @@ jobs:
       with:
         # The URL for uploading assets to the release
         upload_url: $ {{ steps.create_release.outputs.upload_url }}
-        asset_path: ./package-linux-amd64.tar.gz
-        asset_name: package-linux-amd64.tar.gz
+        asset_path: ./package-*.tar.gz
         asset_content_type: application/zip
