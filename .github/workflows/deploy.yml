@@ -33,7 +33,6 @@ jobs:
     - name: Upload
       uses: actions/upload-release-asset@v1.0.1
       with:
-        # The URL for uploading assets to the release
         upload_url: $ {{ steps.create_release.outputs.upload_url }}
         asset_path: ./package-${{ runner.os }}-amd64-${{ github.ref }}.tar.gz
         asset_name: package-${{ runner.os }}-amd64-${{ github.ref }}.tar.gz
