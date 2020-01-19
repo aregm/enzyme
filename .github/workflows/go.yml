@@ -3,7 +3,10 @@ on: [push]
 jobs:
   test:
     name: Run tests
-    runs-on: ubuntu-18.04
+    strategy:
+      matrix:
+        os: [ubuntu-18.04, windows-latest, macos-latest]
+    runs-on: ${{matrix.os}}
     steps:
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
