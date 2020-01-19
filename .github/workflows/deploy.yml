@@ -1,7 +1,5 @@
 name: Rhoc Deploy
-on:
-  push:
-    tags: '*'
+on: [push]
 jobs:
   deploy:
     name: Deploy
