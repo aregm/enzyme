@@ -30,10 +30,9 @@ jobs:
       run: make
     
     - name: Upload
-      uses: actions/upload-release-asset@v1.0.1
+      uses: JasonEtco/upload-to-release@master
       with:
-        upload_url: ${{ github.event.release.release.upload_url }}
-        asset_path: ./package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
-        asset_name: package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
-        asset_content_type: application/zip
+        args: ./package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
