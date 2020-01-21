@@ -13,6 +13,10 @@ jobs:
         os: [ubuntu-18.04, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
     steps:
+    - name: Get tag
+      id: get_tag
+      run: echo ::set-output name=TAG::$(git describe --tags)
+
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
@@ -40,6 +44,6 @@ jobs:
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: $ {{ steps.create_release.outputs.upload_url }}
-        asset_path: ./package-${{ runner.os }}-amd64-${{ github.ref }}.tar.gz
-        asset_name: package-${{ runner.os }}-amd64-${{ github.ref }}.tar.gz
+        asset_path: ./package-${{ runner.os }}-amd64-${{ steps.get_tag.outputs.TAG }}.tar.gz
+        asset_name: package-${{ runner.os }}-amd64-${{ steps.get_tag.outputs.TAG }}.tar.gz
         asset_content_type: application/zip
