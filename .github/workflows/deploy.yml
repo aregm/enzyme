@@ -32,7 +32,7 @@ jobs:
     - name: Upload
       uses: actions/upload-release-asset@v1.0.1
       with:
-        upload_url: ${{ github.event.upload_url }}
+        upload_url: ${{ github.event.release.release.upload_url }}
         asset_path: ./package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
         asset_name: package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
         asset_content_type: application/zip
