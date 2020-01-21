@@ -7,8 +7,6 @@ jobs:
       matrix:
         os: [ubuntu-18.04, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
-    env:
-      SHA7: ${GITHUB_SHA::7}
     steps:
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
@@ -27,8 +25,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${GITHUB_SHA::7}
+        release_name: Release ${GITHUB_SHA::7}
         draft: false
         prerelease: false    
     
@@ -36,6 +34,6 @@ jobs:
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: $ {{ steps.create_release.outputs.upload_url }}
-        asset_path: ./package-${{ runner.os }}-amd64-$SHA7.tar.gz
-        asset_name: package-${{ runner.os }}-amd64-$SHA7.tar.gz
+        asset_path: ./package-${{ runner.os }}-amd64-${GITHUB_SHA::7}.tar.gz
+        asset_name: package-${{ runner.os }}-amd64-${GITHUB_SHA::7}.tar.gz
         asset_content_type: application/zip
