@@ -16,15 +16,23 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
       
-    - name: Get tag
-      id: get_tag
-      run: echo ::set-output name=TAG::$(git describe --tags)
-
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
       with:
         go-version: 1.13
       id: go
+      
+    - name: Get tag
+      id: get_tag
+      run: echo ::set-output name=TAG::$(git describe --tags)
+
+    - name: Get arch
+      id: get_arch
+      run: echo ::set-output name=ARCH::$(go env GOARCH)
+    
+    - name: Get os
+      id: get_os
+      run: echo ::set-output name=OS::$(go env GOOS)
 
     - name: Build package
       run: make
@@ -44,6 +52,6 @@ jobs:
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: $ {{ steps.create_release.outputs.upload_url }}
-        asset_path: ./package-${{ runner.os }}-amd64-${{ steps.get_tag.outputs.TAG }}.tar.gz
-        asset_name: package-${{ runner.os }}-amd64-${{ steps.get_tag.outputs.TAG }}.tar.gz
+        asset_path: ./package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
+        asset_name: package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
         asset_content_type: application/zip
