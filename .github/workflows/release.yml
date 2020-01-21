@@ -1,0 +1,20 @@
+name: Release
+on:
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    
+create_release:
+    name: Create Release
+    runs-on: ubuntu-18.04
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+    - name: Create release
+      uses: actions/create-release@v1.0.0
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
