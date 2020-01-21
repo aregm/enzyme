@@ -13,6 +13,9 @@ jobs:
         os: [ubuntu-18.04, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
     steps:
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+      
     - name: Get tag
       id: get_tag
       run: echo ::set-output name=TAG::$(git describe --tags)
@@ -22,9 +25,6 @@ jobs:
       with:
         go-version: 1.13
       id: go
-
-    - name: Check out code into the Go module directory
-      uses: actions/checkout@v1
 
     - name: Build package
       run: make
