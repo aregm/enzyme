@@ -1,20 +1,16 @@
-name: Release
+name: release
+
 on:
   push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+    # branches to consider in the event; optional, defaults to all
+    branches:
+      - master
+
 jobs:
-  create_release:
-    name: Create Release
-    runs-on: ubuntu-18.04
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  update_draft_release:
+    runs-on: ubuntu-latest
     steps:
-    - name: Create release
-      uses: actions/create-release@v1.0.0
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
+      # Drafts your next Release notes as Pull Requests are merged into "master"
+      - uses: toolmantim/release-drafter@v5.2.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
