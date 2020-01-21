@@ -1,9 +1,7 @@
 name: Rhoc Deploy
 on:
-  push:
-    # Sequence of patterns matched against refs/tags
-    tags:
-    - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+  release:
+    types: created
 
 jobs:
   build:
@@ -34,21 +32,8 @@ jobs:
     - name: Upload
       uses: actions/upload-release-asset@v1.0.1
       with:
-        path: ./package-${{ steps.get_env.outputs.OS }}-${{ steps.get_env.outputs.ARCH }}-${{ steps.get_env.outputs.TAG }}.tar.gz
-        name: package-${{ steps.get_env.outputs.OS }}-${{ steps.get_env.outputs.ARCH }}-${{ steps.get_env.outputs.TAG }}.tar.gz
+        upload_url: ${{ github.event.client_payload.release_url }}
+        asset_path: ./package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
+        asset_name: package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
+        asset_content_type: application/zip
         
-  deploy:
-    name: Deploy
-    runs-on: ubuntu-18.04
-    needs: [build]
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    steps:
-    - name: Create release
-      id: create_release
-      uses: actions/create-release@v1.0.0
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
