@@ -6,14 +6,12 @@ on:
     - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
 
 jobs:
-  deploy:
-    name: Deploy
+  build:
+    name: Build
     strategy:
       matrix:
         os: [ubuntu-18.04, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v1
@@ -24,21 +22,28 @@ jobs:
         go-version: 1.13
       id: go
       
-    - name: Get tag
-      id: get_tag
-      run: echo ::set-output name=TAG::$(git describe --tags)
-
-    - name: Get arch
-      id: get_arch
-      run: echo ::set-output name=ARCH::$(go env GOARCH)
-    
-    - name: Get os
-      id: get_os
-      run: echo ::set-output name=OS::$(go env GOOS)
+    - id: get_env
+      run: |
+        echo ::set-output name=TAG::$(git describe --tags)
+        echo ::set-output name=ARCH::$(go env GOARCH)
+        echo ::set-output name=OS::$(go env GOOS)
 
     - name: Build package
       run: make
     
+    - name: Upload
+      uses: actions/upload-release-asset@v1.0.1
+      with:
+        path: ./package-${{ steps.get_env.outputs.OS }}-${{ steps.get_env.outputs.ARCH }}-${{ steps.get_env.outputs.TAG }}.tar.gz
+        name: package-${{ steps.get_env.outputs.OS }}-${{ steps.get_env.outputs.ARCH }}-${{ steps.get_env.outputs.TAG }}.tar.gz
+        
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-18.04
+    needs: [build]
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
     - name: Create release
       id: create_release
       uses: actions/create-release@v1.0.0
@@ -47,11 +52,3 @@ jobs:
         release_name: Release ${{ github.ref }}
         draft: false
         prerelease: false
-    
-    - name: Upload
-      uses: actions/upload-release-asset@v1.0.1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
-        asset_name: package-${{ steps.get_os.outputs.OS }}-${{ steps.get_arch.outputs.ARCH }}-${{ steps.get_tag.outputs.TAG }}.tar.gz
-        asset_content_type: application/zip
