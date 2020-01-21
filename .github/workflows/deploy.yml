@@ -7,6 +7,8 @@ jobs:
       matrix:
         os: [ubuntu-18.04, windows-latest, macos-latest]
     runs-on: ${{matrix.os}}
+    env:
+      SHA7: ${GITHUB_SHA::7}
     steps:
     - name: Set up Go 1.13
       uses: actions/setup-go@v1
@@ -34,6 +36,6 @@ jobs:
       uses: actions/upload-release-asset@v1.0.1
       with:
         upload_url: $ {{ steps.create_release.outputs.upload_url }}
-        asset_path: ./package-${{ runner.os }}-amd64-${{ github.ref }}.tar.gz
-        asset_name: package-${{ runner.os }}-amd64-${{ github.ref }}.tar.gz
+        asset_path: ./package-${{ runner.os }}-amd64-$SHA8.tar.gz
+        asset_name: package-${{ runner.os }}-amd64-$SHA8.tar.gz
         asset_content_type: application/zip
