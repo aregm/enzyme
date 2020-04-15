@@ -2,22 +2,20 @@
 
 1. [Introduction](#introduction)
    1. [Overview](#overview)
-   2. [Intro to HPC](#intro-to-HPC)
-      1. [What we want](#what-we-want)
-      2. [Reasoning for using HPC in the cloud](#reasoning-for-using-hpc-in-the-cloud)
+   2. [Intro to HPC](#Intro-to-the-Intel®-HPC-Platform-Specification)
+      1. [Motivations for enabling HPC in the cloud](#Motivations-for-enabling-HPC-in-the-cloud)
    3.  [How the parameterization works](#how-the-parameterization-works)
-   4. [Supported providers](#supported-providers)
+   4. [Supported providers](#Currently-supported-providers)
 2.  [How to use RHOC](#How-to-use-RHOC) 
    1. [Preparation steps](#preparation-steps)
       1. [Cloud system](#cloud-system)
-      2. [Intel software](#intel-software)
-      3. [Other additional software](#other-additional-software)
+      2. [Other required software](#Other-required-software)
    2. [Installing RHOC](#installing-RHOC)
    3. [Use cases](#use-cases)
-      1. [Workload launching](#workload-launching)
-      2. [Persistent cluster](#persistent-cluster)
-      3. [Workload launching with storage](#workload-launching-with-storage)
-      4. [Destroying](#destroying)
+      1. [Workload launching](#Launching-workloads)
+      2. [Persistent cluster](#Persistent-clusters)
+      3. [Workload launching with storage](#Launching-workloads-with-storage)
+      4. [Destroying](#Destroying-clusters)
       5. [Additional commands and options](#additional-commands-and-options)
    4. [Options and parameters](#options-and-parameters)
    5. [Examples](#examples)
@@ -98,7 +96,7 @@ You need to install:
 
 - First, create a configuration file with your [customized parameters](#options-and-parameters). For example, see `examples/linpack/linpack-cluster.json`
 
-#####  Launching workloads  
+#####  Launching workloads
 
 ```
 RHOC run task.sh --parameters path/to/parameters.json
@@ -378,5 +376,3 @@ Let's create your first own cluster.
    ```
 - Full log of running OpenFOAM should be available as `RHOC-download/log.simpleFoam`
 - This is it! You have just successfully ran OpenFOAM on the cloud.
-
-
