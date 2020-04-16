@@ -2,14 +2,14 @@
 
 1. [Introduction](#introduction)
    1. [Overview](#overview)
-   2. [Intro to HPC](#Intro-to-the-Intel®-HPC-Platform-Specification)
+   2. [Intro to HPC](#Intro-to-the-Intel-HPC-Platform-Specification)
       1. [Motivations for enabling HPC in the cloud](#Motivations-for-enabling-HPC-in-the-cloud)
    3.  [How the parameterization works](#how-the-parameterization-works)
    4. [Supported providers](#Currently-supported-providers)
 2.  [How to use RHOC](#How-to-use-RHOC) 
    1. [Preparation steps](#preparation-steps)
       1. [Cloud system](#cloud-system)
-      2. [Other required software](#Other-required-software)
+      2. [Required software](#Required-software)
    2. [Installing RHOC](#installing-RHOC)
    3. [Use cases](#use-cases)
       1. [Workload launching](#Launching-workloads)
@@ -71,7 +71,7 @@ For [Google Cloud Platform](https://cloud.google.com/iam/docs/creating-managing-
 
 and put it into any folder (e.g. `user_credentials/gcp/gcp_credentials.json`). 
 
-#### Other required software
+#### Required software
 
 You need to install:
 
