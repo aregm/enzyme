@@ -67,7 +67,8 @@ First, you need to have an account with a supported provider:
 
 Then you need credentials:
 
-For [Google Cloud Platform](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys) 
+* For [Google Cloud Platform](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys)
+* For [Amazon Web Services](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey) 
 
 and put it into any folder (e.g. `user_credentials/gcp/gcp_credentials.json`). 
 
