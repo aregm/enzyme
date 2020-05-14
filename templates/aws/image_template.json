@@ -92,8 +92,7 @@
                 "/usr/sbin/getenforce | grep -vqi disabled && sudo /usr/sbin/setsebool -P use_nfs_home_dirs=true || echo SELinux already disabled",
                 "find ~/zyme-tools-distrib -name '*.sh' -exec dos2unix {} \\;",
                 "find ~/zyme-tools-distrib -name '*.sh' -exec chmod +x {} \\;",
-                "~/zyme-tools-distrib/intel_tools_install.sh clck intel-clck-2019",
-                "~/zyme-tools-distrib/intel_tools_install.sh psxe_cluster_edition intel-psxe-common-2018"
+                "~/zyme-tools-distrib/intel_tools_install.sh"
             ]
         },
         {
