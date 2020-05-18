@@ -1,6 +1,7 @@
 package provider
 
 import (
+	"os"
 	"path/filepath"
 
 	log "github.com/sirupsen/logrus"
@@ -27,6 +28,9 @@ func createProviderAWS(region string, zone string, credentialPath string) (Provi
 
 		return nil, err
 	}
+
+	// Packer Amazon EBS builder perform lookup in home location or via the env variable
+	os.Setenv("AWS_SHARED_CREDENTIALS_FILE", credentialAbsPath)
 
 	return &providerAWS{
 		baseFunctionality{
