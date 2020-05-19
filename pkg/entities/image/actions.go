@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 
@@ -122,13 +123,27 @@ func (action *buildImage) imageExists() (bool, error) {
 	action.stage.Set(":checking existence")
 	defer action.stage.Reset()
 
+	if _, err := action_pkg.RunLoggedCmdDir(tfLogPrefix, imageDestroyDir, provider.Terraform(),
+		"refresh", "-state-out=checked.tfstate", "-backup=-"); err != nil {
+		panic("refresh failed")
+	}
+
+	// TODO replace with ParseTerraformOutputs
+	var buffer0 bytes.Buffer
+	if _, err := action_pkg.RunLoggedCmdDirOutput(tfLogPrefix, imageDestroyDir, &buffer0, provider.Terraform(),
+		"output", "-state=checked.tfstate", "id"); err != nil {
+		panic("output failed")
+	}
+	amiID := buffer0.Bytes()
+
 	imageResourceName := action.img.provider.GetTFImageResourceName()
 	if _, err := action_pkg.RunLoggedCmdDir(tfLogPrefix, imageDestroyDir, provider.Terraform(),
 		"import", "-state-out=checked.tfstate", "-backup=-", imageResourceName+".zyme_image",
-		action.img.name); err != nil {
+		strings.TrimSuffix(string(amiID), "\n")); err != nil {
 		if exited, ok := err.(*exec.ExitError); ok {
 			if exited.ExitCode() != -1 {
 				log.WithFields(log.Fields{
+					"dir":   imageDestroyDir,
 					"image": action.img,
 				}).Info("Image.imageExists: image does not exist")
 

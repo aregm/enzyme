@@ -105,10 +105,21 @@ func (provider *providerAWS) MakeCreateImageConfig(imageTemplatePath string, ima
 
 func (provider *providerAWS) MakeDestroyImageConfig(imageVariables config.Config) (config.Config, error) {
 	configsToSet := make(map[string]interface{})
-	configsToSet["provider.aws.shared_credentials_file"] = provider.GetCredentialPath()
 
+	configsToSet["provider.aws.shared_credentials_file"] = provider.GetCredentialPath()
 	configsToSet["provider.aws.region"] = provider.GetRegion()
 	configsToSet["provider.aws.version"] = "~> 2.1"
+
+	imageName, err := imageVariables.GetString("image_name")
+	if err != nil {
+		panic("image_name not found among other image variables")
+	}
+
+	configsToSet["data.aws_ami.get_image_id.owners"] = []string{"self"}
+	configsToSet["data.aws_ami.get_image_id.filter.name"] = "name"
+	configsToSet["data.aws_ami.get_image_id.filter.values"] = []string{imageName}
+
+	configsToSet["output.id.value"] = "${data.aws_ami.get_image_id.id}"
 
 	return makeDestroyImageConfigGeneral(configsToSet, templates[provider.GetName()]["destroyImageTemplate"])
 }
