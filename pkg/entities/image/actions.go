@@ -134,12 +134,12 @@ func (action *buildImage) imageExists() (bool, error) {
 		"output", "-state=checked.tfstate", "id"); err != nil {
 		panic("output failed")
 	}
-	amiID := buffer0.Bytes()
+	amiID := strings.TrimSuffix(string(buffer0.Bytes()), "\n")
 
 	imageResourceName := action.img.provider.GetTFImageResourceName()
 	if _, err := action_pkg.RunLoggedCmdDir(tfLogPrefix, imageDestroyDir, provider.Terraform(),
 		"import", "-state-out=checked.tfstate", "-backup=-", imageResourceName+".zyme_image",
-		strings.TrimSuffix(string(amiID), "\n")); err != nil {
+		amiID); err != nil {
 		if exited, ok := err.(*exec.ExitError); ok {
 			if exited.ExitCode() != -1 {
 				log.WithFields(log.Fields{

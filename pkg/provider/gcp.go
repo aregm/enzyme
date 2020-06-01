@@ -82,8 +82,17 @@ func (provider *providerGCP) MakeDestroyImageConfig(imageVariables config.Config
 		configsToSet["provider.google.project"] = "zyme-cluster"
 	}
 
+	imageName, err := imageVariables.GetString("image_name")
+	if err != nil {
+		panic("image_name not found among other image variables")
+	}
+
 	configsToSet["provider.google.region"] = provider.GetRegion()
 	configsToSet["provider.google.version"] = "~> 2.5"
+
+	configsToSet["data.google_compute_image.get_image_id.name"] = imageName
+
+	configsToSet["output.id.value"] = "${data.google_compute_image.get_image_id.self_link}"
 
 	return makeDestroyImageConfigGeneral(configsToSet, templates[provider.GetName()]["destroyImageTemplate"])
 }
