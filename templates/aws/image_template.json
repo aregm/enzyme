@@ -45,7 +45,9 @@
             ],
             
             "force_deregister": true,
-            "force_delete_snapshot": true
+            "force_delete_snapshot": true,
+
+            "ami_description": "Rhoc image. ConfigHash=[{{user `configuration_hash`}}]"
         }
     ],
 
