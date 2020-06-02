@@ -112,7 +112,10 @@ func (provider *providerAWS) MakeDestroyImageConfig(imageVariables config.Config
 
 	imageName, err := imageVariables.GetString("image_name")
 	if err != nil {
-		panic("image_name not found among other image variables")
+		log.WithFields(log.Fields{
+			"config": imageVariables,
+		}).Errorf("providerAWS.MakeDestroyImageConfig: image_name not found among other image variables: %s", err)
+		return nil, err
 	}
 
 	configsToSet["data.aws_ami.get_image_id.owners"] = []string{"self"}

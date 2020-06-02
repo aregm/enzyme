@@ -84,7 +84,10 @@ func (provider *providerGCP) MakeDestroyImageConfig(imageVariables config.Config
 
 	imageName, err := imageVariables.GetString("image_name")
 	if err != nil {
-		panic("image_name not found among other image variables")
+		log.WithFields(log.Fields{
+			"config": imageVariables,
+		}).Errorf("providerGCP.MakeDestroyImageConfig: image_name not found among other image variables: %s", err)
+		return nil, err
 	}
 
 	configsToSet["provider.google.region"] = provider.GetRegion()
