@@ -129,7 +129,7 @@ func (action *buildImage) imageExists() (bool, error) {
 		"refresh", "-state-out=checked.tfstate", "-backup=-"); err != nil {
 		if exited, ok := err.(*exec.ExitError); ok {
 			if exited.ExitCode() != -1 {
-				logger.Info("Image.imageExists: refreshed failed; assume image does not exist")
+				logger.Info("Image.imageExists: 'terraform refresh' failed; assuming image does not exist")
 			}
 			return false, nil
 		}
@@ -138,7 +138,7 @@ func (action *buildImage) imageExists() (bool, error) {
 	var buffer0 bytes.Buffer
 	if logname, err := action_pkg.RunLoggedCmdDirOutput(tfLogPrefix, imageDestroyDir, &buffer0, provider.Terraform(),
 		"output", "-state=checked.tfstate", "id"); err != nil {
-		logger.Errorf("Image.imageExists: terraform output failed: %s", err)
+		logger.Errorf("Image.imageExists: 'terraform output' failed: %s", err)
 		fmt.Fprintf(os.Stderr, "Cannot check if image exists, see log for details: %s\n", logname)
 
 		return false, err
