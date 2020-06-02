@@ -143,12 +143,12 @@ func (action *buildImage) imageExists() (bool, error) {
 
 		return false, err
 	}
-	amiID := strings.TrimSuffix(string(buffer0.Bytes()), "\n")
+	imageID := strings.TrimSuffix(string(buffer0.Bytes()), "\n")
 
 	imageResourceName := action.img.provider.GetTFImageResourceName()
 	if _, err := action_pkg.RunLoggedCmdDir(tfLogPrefix, imageDestroyDir, provider.Terraform(),
 		"import", "-state-out=checked.tfstate", "-backup=-", imageResourceName+".zyme_image",
-		amiID); err != nil {
+		imageID); err != nil {
 		if exited, ok := err.(*exec.ExitError); ok {
 			if exited.ExitCode() != -1 {
 				logger.Info("Image.imageExists: image does not exist")
