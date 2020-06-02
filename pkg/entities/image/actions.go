@@ -7,6 +7,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strconv"
+	"strings"
 
 	log "github.com/sirupsen/logrus"
 
@@ -111,35 +112,51 @@ func (action *buildImage) imageExists() (bool, error) {
 	}
 
 	imageDestroyDir, _ := filepath.Split(action.img.configPath)
+	logger := log.WithFields(log.Fields{
+		"dir":   imageDestroyDir,
+		"image": action.img,
+	})
 
 	tfLogPrefix, err := action.img.makeToolLogPrefix("terraform")
 	if err != nil {
-		log.WithFields(log.Fields{
-			"image": action.img,
-		}).Warnf("Image.imageExists: cannot make logfile name: %s", err)
+		logger.Warnf("Image.imageExists: cannot make logfile name: %s", err)
 	}
 
 	action.stage.Set(":checking existence")
 	defer action.stage.Reset()
 
+	if _, err := action_pkg.RunLoggedCmdDir(tfLogPrefix, imageDestroyDir, provider.Terraform(),
+		"refresh", "-state-out=checked.tfstate", "-backup=-"); err != nil {
+		if exited, ok := err.(*exec.ExitError); ok {
+			if exited.ExitCode() != -1 {
+				logger.Info("Image.imageExists: 'terraform refresh' failed; assuming image does not exist")
+			}
+			return false, nil
+		}
+	}
+
+	var buffer0 bytes.Buffer
+	if logname, err := action_pkg.RunLoggedCmdDirOutput(tfLogPrefix, imageDestroyDir, &buffer0, provider.Terraform(),
+		"output", "-state=checked.tfstate", "id"); err != nil {
+		logger.Errorf("Image.imageExists: 'terraform output' failed: %s", err)
+		fmt.Fprintf(os.Stderr, "Cannot check if image exists, see log for details: %s\n", logname)
+
+		return false, err
+	}
+	imageID := strings.TrimSuffix(string(buffer0.Bytes()), "\n")
+
 	imageResourceName := action.img.provider.GetTFImageResourceName()
 	if _, err := action_pkg.RunLoggedCmdDir(tfLogPrefix, imageDestroyDir, provider.Terraform(),
 		"import", "-state-out=checked.tfstate", "-backup=-", imageResourceName+".zyme_image",
-		action.img.name); err != nil {
+		imageID); err != nil {
 		if exited, ok := err.(*exec.ExitError); ok {
 			if exited.ExitCode() != -1 {
-				log.WithFields(log.Fields{
-					"image": action.img,
-				}).Info("Image.imageExists: image does not exist")
-
+				logger.Info("Image.imageExists: image does not exist")
 				return false, nil
 			}
 		}
 
-		log.WithFields(log.Fields{
-			"image": action.img,
-		}).Errorf("Image.imageExists: cannot check for existence: %s", err)
-
+		logger.Errorf("Image.imageExists: cannot check for existence: %s", err)
 		return false, err
 	}
 
@@ -148,9 +165,7 @@ func (action *buildImage) imageExists() (bool, error) {
 	if logname, err :=
 		action_pkg.RunLoggedCmdDirOutput(tfLogPrefix, imageDestroyDir, &buffer, provider.Terraform(),
 			"state", "show", "-state=checked.tfstate", imageResourceName+".zyme_image"); err != nil {
-		log.WithFields(log.Fields{
-			"image": action.img,
-		}).Errorf("Image.imageExists: cannot read terraform output: %s", err)
+		logger.Errorf("Image.imageExists: cannot read terraform output: %s", err)
 		fmt.Fprintf(os.Stderr, "Cannot check if image exists, see log for details: %s\n", logname)
 
 		return false, err
@@ -158,10 +173,7 @@ func (action *buildImage) imageExists() (bool, error) {
 
 	remoteConfigHash, err := action.img.provider.GetImageConfigHash(buffer.Bytes())
 	if err != nil {
-		log.WithFields(log.Fields{
-			"image": action.img,
-		}).Warnf("Image.imageExists: cannot read config hash: %s, assume image out of date", err)
-
+		logger.Warnf("Image.imageExists: cannot read config hash: %s, assume image out of date", err)
 		return false, nil
 	}
 
