@@ -86,7 +86,7 @@ func (provider *providerGCP) MakeDestroyImageConfig(imageVariables config.Config
 	if err != nil {
 		log.WithFields(log.Fields{
 			"config": imageVariables,
-		}).Errorf("providerGCP.MakeDestroyImageConfig: image_name not found among other image variables: %s", err)
+		}).Errorf("providerGCP.MakeDestroyImageConfig: image_name variable must be defined: %s", err)
 		return nil, err
 	}
 
