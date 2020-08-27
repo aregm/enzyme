@@ -25,26 +25,24 @@
 
 ## Introduction
 
-* This is a Pre-Alpha Engineering Version
+* This is a relatively new project and should be considered Alpha level software
 
 ### Overview
 
-RHOC is a software tool that allows you to set up Intel® HPC Platform Specification compliant cloud-based clusters and other types of clusters, including single-node usage, in a cloud-independent way. RHOC can create an Intel HPC Platform compatible cluster on a variety of cloud infrastructures, including public and private clouds, easing development of hybrid- and multi-cloud HPC environments. It does not contain any scheduler, orchestration, or resource manager, but these can be added to manage the cluster.
+RHOC is a software tool that helps provide an acclerated path to spinning up and utilizing high performance compute clusters in the cloud. RHOC provides a simple command line mechanism for users to launch workloads pointing to templates that abstract the orchestration and Operating System image generation of the HPC cluster. It creates operating system images that follow the Intel® HPC Platform Specification to provide a standard base solution that enables a wide range of popular HPC applications. RHOC aims to accelerate the path for users wanting to migrate to a public cloud by abstracting the learning curve of a supported cloud provider. This allows users a "rapid" path to start using cloud resources, and it allows the RHOC community to collaborate to provide optimal envinronments for the underlying HPC solutions. 
+
+### Motivations for enabling HPC in the cloud
+
+There are many reasons for running HPC and compute intensive workloads in a cloud environment. The following are some of the top motivators behind RHOC, but the list is not exhaustive.
+- Local HPC cluster resource capacity is typically fixed while demand is variable. Cloud resources provide augmentation to local resources that help meet spikes in resource needs on demand.
+- Cloud-based HPC clusters can simplify and accelerate access for new HPC users and new businesses, resulting in faster time to results. 
+- Cloud provides a means to access massive resources or specialized resource for short periods, to address temporary or intermittent business needs.
+- Cloud provides access to the newest technologies, allowing evaluation and use ahead of long-term ownership
+- Datasets may already exist in the cloud, and utilizing cloud resouces may be the best option for performance and/or cost. 
 
 ### Intro to the Intel® HPC Platform Specification
 
-The Intel HPC Platform Specification defines both software and hardware requirements that form a foundation for high performance computing solutions. Systems that comply with the specification have enhanced compatibility and performance across a range of popular HPC workloads.
-
-#### Motivations for enabling HPC in the cloud
-
-- HPC cluster capacity is typically fixed, but demand is typically variable. Cloud-based HPC can provide additional capacity on demand.
-- Cloud-based HPC clusters can simplify and accelerate access for new HPC users and new businesses, resulting in faster time to results.
-- Cloud provides a means to access massive resources or specialized resource for short periods, to address temporary or intermittent business needs.
-- Cloud provides access to the newest technologies, allowing evaluation and use ahead of long-term ownership
-
-### How the parameterization works
-
-RHOC takes the parameters from a user-provided `*.json` file and from the command line. All parameters from the file and command line are combined into a single structure. RHOC gets templates from the `templates/{provider}/` folder and replaces default variables with the user’s parameters. It then saves new configuration files based on these templates to `.RHOC/`. The generated files are used by terraform and packer tools for creating machine images and the cluster.
+The Intel HPC Platform Specification captures industry best practices, optimized Intel runtime requirements, and broad application compatability needs. These requirements form a foundation for high performance computing solutions to provide enhanced compatibility and performance across a range of popular HPC workloads. Intel developed this specification by collaborating with many industry partners, incorporating feedback, and curating the specification since 2007.
 
 ### Currently supported providers
 
