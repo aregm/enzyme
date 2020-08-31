@@ -9,7 +9,7 @@
    1. [Required software](#Required-software)
    2. [Cloan the RHOC respository](#clone-the-RHOC-repository)
    3. [Build RHOC](#build-RHOC)
-3.  [Getting Started with RHOC](#Getting-Started-with-RHOC) 
+3.  [Getting Started with RHOC](#Getting-Started-with-RHOC)
    1. [User Credentials File](#User-Credentials-File)
    2. [Cloud Provider Templates](#cloud-provider-templates)
    3. [Test Run](#test-run)   
@@ -66,6 +66,7 @@ The Intel HPC Platform Specification captures industry best practices, optimized
 - [Microsoft Azure](https://azure.microsoft.com/en-us/)
 
 ## Installing RHOC
+
 ### Required software
 
 You need to install:
