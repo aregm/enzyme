@@ -173,8 +173,6 @@ Troubleshooting areas to check:
 
 ## RHOC User Guide
 
-- First, create a configuration file with your [customized parameters](#options-and-parameters). For example, see `examples/linpack/linpack-cluster.json`
-
 ###  Launching workloads
 
 ```
