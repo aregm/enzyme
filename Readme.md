@@ -144,7 +144,7 @@ With this in mind, three steps are all that are requried to test execution using
 
 3. Execute the command to run HP-LINPACK through RHOC on the default cloud provider. The following commmand uses both the default cloud provider as well as the default user credentials file (from Step 1).
    ```
-   RHOC run examples/linpack/linpack-cluster.sh --parameters examples/linpack/linpack-cluster.json --upload-files examples/linpack/HPL.dat
+   Rhoc run examples/linpack/linpack-cluster.sh --parameters examples/linpack/linpack-cluster.json --upload-files examples/linpack/HPL.dat
    ```
 
 RHOC will begin building a compute node operating system and installing on the desired instance types in the cloud provider. If that is successful, RHOC will launch HP-LINPACK on the cluster. RHOC reports progress along the way, so there should be periodic output displayed on console. 
@@ -176,7 +176,7 @@ Troubleshooting areas to check:
 ###  Launching workloads
 
 ```
-RHOC run task.sh --parameters path/to/parameters.json
+Rhoc run task.sh --parameters path/to/parameters.json
 ```
 
 This command will instantiate a cloud-based cluster and run the specified task. On first use, the machine image will be automatically created. After the task completes, the cluster will be destroyed, but the machine image will be left intact for future use.
@@ -184,7 +184,7 @@ This command will instantiate a cloud-based cluster and run the specified task. 
 ### Persistent clusters  
 
 ```
-rhoc run task.sh --parameters path/to/parameters.json --keep-cluster
+Rhoc run task.sh --parameters path/to/parameters.json --keep-cluster
 ```
 
 This command will instantiate the requested cluster and storage for the specified task. The required images will be created on first use. Using `--use-storage` option allows you to access data living on the storage node. **NOTICE**: *make sure you don't change parameters in configuration except `storage_disk_size`, otherwise, a new storage will be created after parameters are changed. Currently changing `storage_disk_size` has no effect and the disk keep its previous size, to force it to resize destroy the storage node and delete the disk in cloud provider interface.*
@@ -194,7 +194,7 @@ You can create a persistent cluster without running a task. For this, just use t
 ### Launching workloads with storage
 
 ```
-rhoc run task.sh --parameters path/to/parameters.json --use-storage
+Rhoc run task.sh --parameters path/to/parameters.json --use-storage
 ```
 
 This command will instantiate the requested cluster and storage and then run the specified task. As before, the required images will be created on first use. Using `--use-storage` option allows you to access to storage data. **NOTICE**: *make sure you didn't change parameters in configuration except `storage_disk_size`, otherwise, a new storage will be created after parameters are changed. `storage_disk_size` changing is ignored, disk keep the previous size.*
@@ -204,7 +204,7 @@ You can create storage without running a task. For this, just use the [create st
 ### Destroying clusters
 
 ```
-rhoc destroy destroyObjectID
+Rhoc destroy destroyObjectID
 ```
 
 You can destroy a cluster or storage by *destroyObjectID*, which can be found by [checking state](#check-states).
@@ -214,7 +214,7 @@ You can destroy a cluster or storage by *destroyObjectID*, which can be found by
 ### Create image
 
 ```
-rhoc create image --parameters path/to/parameters.json
+Rhoc create image --parameters path/to/parameters.json
 ```
 
 This command tells RHOC to create a VM image from a single configuration file. You can check for created images in cloud provider interface if you want to.
@@ -222,7 +222,7 @@ This command tells RHOC to create a VM image from a single configuration file. Y
 ### Create cluster
 
 ```
-rhoc create cluster --parameters path/to/parameters.json
+Rhoc create cluster --parameters path/to/parameters.json
 ```
 
 This command tells RHOC to spawn VM instances and form a cluster. It also creates the needed image if it doesn't yet exist.
@@ -230,7 +230,7 @@ This command tells RHOC to spawn VM instances and form a cluster. It also create
 ### Create storage
 
 ```
-rhoc create storage --parameters path/to/parameters.json
+Rhoc create storage --parameters path/to/parameters.json
 ```
 
 This command tells RHOC to create VM instance based on a disk that holds your data. You can use storage to organize your data and control access to it. Storage locates in `/storage` folder on VM instance. It also creates the needed image if it doesn't exist yet.
@@ -240,7 +240,7 @@ Uploading data into the storage is outside the scope of RHOC. RHOC only provides
 ### Check status
 
 ```
-rhoc state
+Rhoc state
 ```
 
 This command enumerate all manageable entities (images, clusters, storages etc.) and their respective status. For cluster and storage entities, additional information about SSH/SCP connection (user name, address, and security keys) is provided, in order to facilitate access to these resources.
@@ -248,7 +248,7 @@ This command enumerate all manageable entities (images, clusters, storages etc.)
 ### Check version
 
 ```
-rhoc version 
+Rhoc version 
 ```
 
 ### Check user defined parameters
@@ -256,7 +256,7 @@ rhoc version
 Use this command with one of the additional arguments: *image, cluster, task*.
 
 ```
-rhoc print-vars image
+Rhoc print-vars image
 ```
 
 You can use `--provider` flag to check parameters specific for certain provider (*default:* GCP)
@@ -264,7 +264,7 @@ You can use `--provider` flag to check parameters specific for certain provider 
 ### Help
 
 ```
-rhoc help
+Rhoc help
 ```
 
 This command prints a short help summary. Also, each RHOC command has a `--help` switch for providing command-related help.
@@ -380,7 +380,7 @@ LAMMPS is a molecular dynamics simulation application. The included workload wil
 
 1. Create storage for the LAMPPS workload
    ```
-   ./RHOC create storage --parameters=examples/lammps/lammps-single-node.json
+   ./Rhoc create storage --parameters=examples/lammps/lammps-single-node.json
    ```
 2. Use information from `./RHOC state` to get connection details to the storage node created in step 1. SSH into the storage nodeusing provided private key and IP address and execute the following commands:
    ```
@@ -393,7 +393,7 @@ LAMMPS is a molecular dynamics simulation application. The included workload wil
 
 4. Execute the LAMMPS benchmark through RHOC
    ```
-   ./RHOC run examples/lammps/lammps-single-node.sh --parameters=examples/lammps/lammps-single-node.json --use-storage --download-files=lammps.log
+   ./Rhoc run examples/lammps/lammps-single-node.sh --parameters=examples/lammps/lammps-single-node.json --use-storage --download-files=lammps.log
    ```
 If successful, the content of `RHOC-download/lammps.log` file should look like this (*Note:* this was received by running on 4 cores):
    ```
@@ -420,7 +420,7 @@ OpenFOAM is a computation fluid dynamics application.
 
 1. Run OpenFOAM benchmark, where *7* is the `endTime` of computing benchmark:
    ```
-   ./RHOC run -r us-east1 -z b --parameters examples/openfoam/openfoam-single-node.json --download-files DrivAer/log.simpleFoam --overwrite examples/openfoam/openfoam-single-node.sh 7
+   ./Rhoc run -r us-east1 -z b --parameters examples/openfoam/openfoam-single-node.json --download-files DrivAer/log.simpleFoam --overwrite examples/openfoam/openfoam-single-node.sh 7
    ```
 Full log of running OpenFOAM should be available as `RHOC-download/log.simpleFoam`
 
