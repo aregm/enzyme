@@ -105,6 +105,8 @@ Note: the *make* file does not currently support building for Windows under a Wi
 
 If the build completes successfully, the RHOC build will create a sub-directory called `package-{GOOS}-amd64` that includes the binaries and supporting directory structures for executing RHOC. In addition, the sub-directory package is archived into `package-{GOOS}-amd64-{version}-{hash}.tar.gz` for easy distribution.
 
+The binary package name for Linux is `Rhoc`, and the binary package name for Windows is `Rhoc.exe`. The command line examples in this guide all use the Linux binary name. For use from a Windows system, substitute the `Rhoc` command with `Rhoc.exe`.
+
 ## Getting Started with RHOC
 
 RHOC takes a number of input parameters that provide user credentials for a target cloud account, templates for the cloud provider, and templates for the desired image to run on top of in the cloud. These JSON inputs are combined into a single structure to drive the Hashicorp tools, terraform and packer, to create machine images and the spin up the cluster.  The combined structure is saved in the `.RHOC/` of the RHOC package directory.
