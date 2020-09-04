@@ -395,7 +395,7 @@ LAMMPS is a molecular dynamics simulation application. The included workload wil
 
 4. Execute the LAMMPS benchmark through RHOC
    ```
-   ./Rhoc run examples/lammps/lammps-single-node.sh --parameters=examples/lammps/lammps-single-node.json --use-storage --download-files=lammps.log
+   Rhoc run examples/lammps/lammps-single-node.sh --parameters=examples/lammps/lammps-single-node.json --use-storage --download-files=lammps.log
    ```
 If successful, the content of `RHOC-download/lammps.log` file should look like this (*Note:* this was received by running on 4 cores):
    ```
@@ -422,7 +422,7 @@ OpenFOAM is a computation fluid dynamics application.
 
 1. Run OpenFOAM benchmark, where *7* is the `endTime` of computing benchmark:
    ```
-   ./Rhoc run -r us-east1 -z b --parameters examples/openfoam/openfoam-single-node.json --download-files DrivAer/log.simpleFoam --overwrite examples/openfoam/openfoam-single-node.sh 7
+   Rhoc run -r us-east1 -z b --parameters examples/openfoam/openfoam-single-node.json --download-files DrivAer/log.simpleFoam --overwrite examples/openfoam/openfoam-single-node.sh 7
    ```
 Full log of running OpenFOAM should be available as `RHOC-download/log.simpleFoam`
 
