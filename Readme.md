@@ -1,50 +1,60 @@
-# RHOC - Rapid HPC Orchestration in the Cloud
+# Rapid HPC Orchestration in the Cloud (RHOC)
 
 1. [Introduction](#introduction)
    1. [Overview](#overview)
-   2. [Intro to HPC](#Intro-to-the-Intel-HPC-Platform-Specification)
-      1. [Motivations for enabling HPC in the cloud](#Motivations-for-enabling-HPC-in-the-cloud)
-   3.  [How the parameterization works](#how-the-parameterization-works)
-   4. [Supported providers](#Currently-supported-providers)
-2.  [How to use RHOC](#How-to-use-RHOC) 
-   1. [Preparation steps](#preparation-steps)
-      1. [Cloud system](#cloud-system)
-      2. [Required software](#Required-software)
-   2. [Installing RHOC](#installing-RHOC)
-   3. [Use cases](#use-cases)
-      1. [Workload launching](#Launching-workloads)
-      2. [Persistent cluster](#Persistent-clusters)
-      3. [Workload launching with storage](#Launching-workloads-with-storage)
-      4. [Destroying](#Destroying-clusters)
-      5. [Additional commands and options](#additional-commands-and-options)
-   4. [Options and parameters](#options-and-parameters)
-   5. [Examples](#examples)
-      1. [LINPACK-based](#run-high-performance-linpack-benchmark-on-cloud-cluster)
-      2. [LAMMPS-based](#run-lammps-molecular-dynamics-simulator-on-login-node)
-      3. [OpenFOAM-based](#run-openfoam-benchmark-on-login-node)
+   2. [Motivations for enabling HPC in the cloud](#Motivations-for-enabling-HPC-in-the-cloud)
+   3. [Intro to the Intel HPC Platform Specification](#Intro-to-the-Intel-HPC-Platform-Specification)
+   4. [Currently Supported providers](#Currently-supported-providers)
+2. [Installing RHOC](#installing-RHOC)
+   1. [Required software](#Required-software)
+   2. [Cloan the RHOC respository](#clone-the-RHOC-repository)
+   3. [Build RHOC](#build-RHOC)
+3. [Getting Started with RHOC](#Getting-Started-with-RHOC)
+   1. [User Credentials File](#User-Credentials-File)
+   2. [Cloud Provider Templates](#cloud-provider-templates)
+   3. [Test Run](#test-run)   
+4. [RHOC User Guide](#RHOC-user-guide)
+      1. [Launching workloads](#Launching-workloads)
+      2. [Persistent clusters](#Persistent-clusters)
+      3. [Launching Workloads with storage](#Launching-workloads-with-storage)
+      4. [Destroying Clusters](#Destroying-clusters)
+      5. [Create image](#create-image)
+      6. [Create storage](#create-storage)
+      7. [Check Status](#check-status)
+      8. [Check version](#check-version)
+      9. [Check user defined parameters](#check-user-defined-parameters)
+      10. [Help](#help)
+      11. [Set Verbosity](#set-verbosity)
+      12. [Simulate](#simulate)
+      13. [Options and parameters](#options-and-parameters)
+5. [Additional Examples](#additional-examples)
+      1. [LAMMPS](#lammps)
+      2. [OpenFOAM](#openfoam)
+6. [Cloud Provider Quick Reference](#cloud-provider-quick-reference)
+   1. [Amazon Web Services](#amazon-web-services)
+   2. [Google Cloud Platform](#google-cloud-platform)
 
 ## Introduction
 
-* This is a Pre-Alpha Engineering Version
+* This is a relatively new project and should be considered Alpha level software
 
 ### Overview
 
-RHOC is a software tool that allows you to set up Intel® HPC Platform Specification compliant cloud-based clusters and other types of clusters, including single-node usage, in a cloud-independent way. RHOC can create an Intel HPC Platform compatible cluster on a variety of cloud infrastructures, including public and private clouds, easing development of hybrid- and multi-cloud HPC environments. It does not contain any scheduler, orchestration, or resource manager, but these can be added to manage the cluster.
+RHOC is a software tool that helps provide an acclerated path to spinning up and utilizing high performance compute clusters in the cloud. RHOC provides a simple command line mechanism for users to launch workloads pointing to templates that abstract the orchestration and Operating System image generation of the HPC cluster. It creates operating system images that follow the Intel® HPC Platform Specification to provide a standard base solution that enables a wide range of popular HPC applications. RHOC aims to accelerate the path for users wanting to migrate to a public cloud by abstracting the learning curve of a supported cloud provider. This allows users a "rapid" path to start using cloud resources, and it allows the RHOC community to collaborate to provide optimal envinronments for the underlying HPC solutions. 
+
+### Motivations for enabling HPC in the cloud
+
+There are many reasons for running HPC and compute intensive workloads in a cloud environment. The following are some of the top motivators behind RHOC, but the list is not exhaustive.
+- Local HPC cluster resource capacity is typically fixed while demand is variable. Cloud resources provide augmentation to local resources that help meet spikes in resource needs on demand.
+- Cloud-based HPC clusters can simplify and accelerate access for new HPC users and new businesses, resulting in faster time to results. 
+- Cloud provides a means to access massive resources or specialized resource for short periods, to address temporary or intermittent business needs.
+- Cloud provides access to the newest technologies, allowing evaluation and use ahead of long-term ownership
+- Datasets may already exist in the cloud, and utilizing cloud resouces may be the best option for performance and/or cost. 
 
 ### Intro to the Intel® HPC Platform Specification
 
-The Intel HPC Platform Specification defines both software and hardware requirements that form a foundation for high performance computing solutions. Systems that comply with the specification have enhanced compatibility and performance across a range of popular HPC workloads.
+The Intel HPC Platform Specification captures industry best practices, optimized Intel runtime requirements, and broad application compatability needs. These requirements form a foundation for high performance computing solutions to provide enhanced compatibility and performance across a range of popular HPC workloads. Intel developed this specification by collaborating with many industry partners, incorporating feedback, and curating the specification since 2007.
 
-#### Motivations for enabling HPC in the cloud
-
-- HPC cluster capacity is typically fixed, but demand is typically variable. Cloud-based HPC can provide additional capacity on demand.
-- Cloud-based HPC clusters can simplify and accelerate access for new HPC users and new businesses, resulting in faster time to results.
-- Cloud provides a means to access massive resources or specialized resource for short periods, to address temporary or intermittent business needs.
-- Cloud provides access to the newest technologies, allowing evaluation and use ahead of long-term ownership
-
-### How the parameterization works
-
-RHOC takes the parameters from a user-provided `*.json` file and from the command line. All parameters from the file and command line are combined into a single structure. RHOC gets templates from the `templates/{provider}/` folder and replaces default variables with the user’s parameters. It then saves new configuration files based on these templates to `.Rhoc/`. The generated files are used by terraform and packer tools for creating machine images and the cluster.
 
 ### Currently supported providers
 
@@ -55,49 +65,117 @@ RHOC takes the parameters from a user-provided `*.json` file and from the comman
 
 - [Microsoft Azure](https://azure.microsoft.com/en-us/)
 
-## How to use RHOC
+## Installing RHOC
 
-### Preparation steps
-
-#### Cloud system
-
-First, you need to have an account with a supported provider:
-
-[Google Cloud Platform](https://accounts.google.com/signup/v2/webcreateaccount?service=cloudconsole&continue=https%3A%2F%2Fconsole.cloud.google.com%2F%3F_ga%3D2.221590619.-23985963.1522764483%26ref%3Dhttps%3A%2F%2Fcloud.google.com%2F&flowName=GlifWebSignIn&flowEntry=SignUp&nogm=true) 
-
-Then you need credentials:
-
-* For [Google Cloud Platform](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys)
-* For [Amazon Web Services](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey) 
-
-and put it into any folder (e.g. `user_credentials/gcp/gcp_credentials.json`). 
-
-#### Required software
+### Required software
 
 You need to install:
 
 - [Go](https://golang.org/doc/install) 
 - *make*: [for Windows](http://gnuwin32.sourceforge.net/packages/make.htm), [for Linux](https://www.gnu.org/software/make/)
 
-### Installing RHOC
+### Clone the RHOC repository
 
--  Clone RHOC repository from [Github](https://github.com/intel-go/RHOC)
+Clone RHOC repository from [Github](https://github.com/intel-go/RHOC)
 
-- Build project by issuing *make* in the root project folder
+RHOC uses open source tools from [Hashicorp](https://www.hashicorp.com), and those tools are included as sub-modules in the RHOC git repository. To ensure all the required source is cloned, it is suggested to use the following:
 
+  ```
+  git clone --recurse-submodules https://github.com/intel-go/RHOC
+  ```
+
+If needed, the sub-modules can be downloaded after cloning by using 
+
+  ```
+  git submodule --init
+  git submodule update 
+  ```
+
+Note: some firewall configurations can impact access to git repositories. 
+
+### Build RHOC
+
+RHOC uses *make* to build the binary from go source code. Build RHOC by specifying the make command and optionally including the target OS platform using the `GOOS` command line option. Options are currently are `windows` or `linux`. If no OS is specificed, the *default* build assumes `linux`
+
+
+Note: the *make* file does not currently support building for Windows under a Windows cmd shell. To build to run RHOC from a Windows platform, use a Windows Bash implementation and run the following make command:
   ```
   make GOOS=windows
   ```
 
-  *GOOS* parameter defines binaries for which platform (`windows`, `linux`) you want to get them. (*default:* `"linux"`)
+If the build completes successfully, the RHOC build will create a sub-directory called `package-{GOOS}-amd64` that includes the binaries and supporting directory structures for executing RHOC. In addition, the sub-directory package is archived into `package-{GOOS}-amd64-{version}-{hash}.tar.gz` for easy distribution.
 
-  You should get a `package-{GOOS}-amd64`  folder with built binaries/executables. Also, the whole package is archived  into `package-{GOOS}-amd64-{version}-{hash}.tar.gz`.
+The binary package name for Linux is `Rhoc`, and the binary package name for Windows is `Rhoc.exe`. The command line examples in this guide all use the Linux binary name. For use from a Windows system, substitute the `Rhoc` command with `Rhoc.exe`.
 
-### Use cases
+## Getting Started with RHOC
 
-- First, create a configuration file with your [customized parameters](#options-and-parameters). For example, see `examples/linpack/linpack-cluster.json`
+RHOC takes a number of input parameters that provide user credentials for a target cloud account, templates for the cloud provider, and templates for the desired image to run on top of in the cloud. These JSON inputs are combined into a single structure to drive the Hashicorp tools, terraform and packer, to create machine images and the spin up the cluster.  The combined structure is saved in the `.RHOC/` of the RHOC package directory.
 
-#####  Launching workloads
+### User Credentials File
+
+RHOC requires an active account for the desired cloud provider. Access to that user account is utilized by providing access keys and account information in a credentials JSON file. Cloud providers typically offer mechanisms to create this credentials file. See the appropriate [Cloud Provider Quick Reference](#cloud-provider-quick-reference) section for referencing how to create a user credentials file for a specific provider. Please note, that these provider specific mechanisms may change.
+
+The user credentials file needs to be copied to the user's host system where RHOC will execute. To use RHOC without specifying a full path to the desired user credentials file, copy the cloud provider crendtials file to `./user_credentials/credentials.json` in the RHOC binary directory. RHOC uses this file as the default to access the desired cloud provider account. RHOC does provide a command line option to use a different path and filename for credentials if desired. For example, a user may have more than one accounts and thus have multiple user credentials files that are specified by the command line option with each run.  
+
+### Cloud Provider Templates
+
+RHOC uses template files to direct how to build a cluster and how to build the compute node operating system to run workloads on the desired type of instance within the desired cloud provider. These templates are JSON files that provide variables that control how RHOC uses the Hashicorp tools. These templates may be curated and expanded to provide additional user options and customizations.
+
+Cloud provider templates are provided under the `.\templates` directory and are typically named after the cloud service provider. The templates `cluster_template.json` and `image_template.json` under a given cloud provider directory control instance and image creation, respectively.
+
+For example, a hypothetical cloud provider called MyCloud would have:
+`./templates/mycloud/cluster_template.json`
+`./templates/mycloud/image_template.json`
+
+A user specifies which cloud provider templates to use with the`-p` or `--provider` command line parameter. RHOC currently defaults to using the Google Cloud Provider templates. To use the hypothetical MyCloud providers then, a user includes `-p mycloud` or `--provider mycloud` on the command line.
+
+### Test Run
+
+Now let's execute a real job as a "Hello, World" test that RHOC is working. To do this, we'll use the well-known High-Performance LINPACK benchmark that is included in the `./examples` folder. This example will use the default cloud provider. To test a different or multiple cloud providers, insert the `-p` option with the name of the directory of the desired provider in the example below. 
+
+To execute a workload through RHOC, the user specifies the job to launch (or typically a launch script) and points to a RHOC parameter file and any potential input data files. The RHOC parameter file fills out and replaces default values used in execution. This allows a user to modify some aspects of execution without needing to modify the cloud provider or image templates themselves. An important parameter is the project name associated with the user account. This must be set correctly in the project parameter file.
+
+With this in mind, three steps are all that are requried to test execution using HP-LINPACK.
+
+1. Copy the user credentials file to `./user_credentials/credentials.json`. This is the default credentials file RHOC uses.
+
+2. Modify the `./examples/linpack/linpack-cluster.json` file to set the `project_name` value to the actual name of the cloud project. For example, if the cloud project name is My-Hpc-Cloud-Cluster, modify the key-value pair in the JSON file to be
+   ```
+   project_name: "My-Hpc-Cloud-Cluster",
+   ```
+
+3. Execute the command to run HP-LINPACK through RHOC on the default cloud provider. The following commmand uses both the default cloud provider as well as the default user credentials file (from Step 1).
+   ```
+   Rhoc run examples/linpack/linpack-cluster.sh --parameters examples/linpack/linpack-cluster.json --upload-files examples/linpack/HPL.dat
+   ```
+
+RHOC will begin building a compute node operating system and installing on the desired instance types in the cloud provider. If that is successful, RHOC will launch HP-LINPACK on the cluster. RHOC reports progress along the way, so there should be periodic output displayed on console. 
+
+If the end of output should looks like this:
+   ```
+   *Finished        1 tests with the following results:*
+
+                                           *1 tests completed and passed residual checks,*
+
+                                            *0 tests completed and failed residual checks,*
+
+                                           *0 tests skipped because of illegal input values.*
+
+   --------------------------------------------------------------------------------
+
+   *End of Tests.*
+   ```
+then HP-LINPACK successfully executed in the cloud. Congratulations!
+
+Unfortunately, if there is an issue, RHOC does not have a well-documented debug section yet. That is a work in progress! Stay tuned.
+Troubleshooting areas to check:
+- TerraForm and Packer executables exist under the `./tools` directory. If not, there was a problem building those tools during the RHOC build.
+
+- A cluster does not appear in the cloud provider dashboard while running RHOC. Potential problems could be a problem with the user account permissions, incorrect user credentials file, or incorrect project name identified in the `./examples/linpack/linpack-cluster.json` file.
+
+## RHOC User Guide
+
+###  Launching workloads
 
 ```
 Rhoc run task.sh --parameters path/to/parameters.json
@@ -105,7 +183,7 @@ Rhoc run task.sh --parameters path/to/parameters.json
 
 This command will instantiate a cloud-based cluster and run the specified task. On first use, the machine image will be automatically created. After the task completes, the cluster will be destroyed, but the machine image will be left intact for future use.
 
-##### Persistent clusters  
+### Persistent clusters  
 
 ```
 Rhoc run task.sh --parameters path/to/parameters.json --keep-cluster
@@ -115,7 +193,7 @@ This command will instantiate the requested cluster and storage for the specifie
 
 You can create a persistent cluster without running a task. For this, just use the [create cluster command](#create-cluster).
 
-##### Launching workloads with storage
+### Launching workloads with storage
 
 ```
 Rhoc run task.sh --parameters path/to/parameters.json --use-storage
@@ -125,7 +203,7 @@ This command will instantiate the requested cluster and storage and then run the
 
 You can create storage without running a task. For this, just use the [create storage command](#create-storage).
 
-##### Destroying clusters
+### Destroying clusters
 
 ```
 Rhoc destroy destroyObjectID
@@ -135,9 +213,7 @@ You can destroy a cluster or storage by *destroyObjectID*, which can be found by
 
 **NOTICE**: *The disk is kept when the storage is destroyed. Only the VM instances will be removed, and the "storage" RHOC entity will change its status from XXXX to configured. You can delete a disk manually through a selected provider if you want to.*
 
-##### Additional commands and options
-
-###### Create image
+### Create image
 
 ```
 Rhoc create image --parameters path/to/parameters.json
@@ -145,7 +221,7 @@ Rhoc create image --parameters path/to/parameters.json
 
 This command tells RHOC to create a VM image from a single configuration file. You can check for created images in cloud provider interface if you want to.
 
-###### Create cluster
+### Create cluster
 
 ```
 Rhoc create cluster --parameters path/to/parameters.json
@@ -153,7 +229,7 @@ Rhoc create cluster --parameters path/to/parameters.json
 
 This command tells RHOC to spawn VM instances and form a cluster. It also creates the needed image if it doesn't yet exist.
 
-###### Create storage
+### Create storage
 
 ```
 Rhoc create storage --parameters path/to/parameters.json
@@ -161,9 +237,9 @@ Rhoc create storage --parameters path/to/parameters.json
 
 This command tells RHOC to create VM instance based on a disk that holds your data. You can use storage to organize your data and control access to it. Storage locates in `/storage` folder on VM instance. It also creates the needed image if it doesn't exist yet.
 
-Uploading data into the storage is outside the scope of RHOC. RHOC only provides information allowing you to connect to the storage using `Rhoc state` [state command](#check-states).
+Uploading data into the storage is outside the scope of RHOC. RHOC only provides information allowing you to connect to the storage using `rhoc state` [state command](#check-states).
 
-###### Check states
+### Check status
 
 ```
 Rhoc state
@@ -171,13 +247,13 @@ Rhoc state
 
 This command enumerate all manageable entities (images, clusters, storages etc.) and their respective status. For cluster and storage entities, additional information about SSH/SCP connection (user name, address, and security keys) is provided, in order to facilitate access to these resources.
 
-###### Check version
+### Check version
 
 ```
-Rhoc version
+Rhoc version 
 ```
 
-###### Check parameters that user can set
+### Check user defined parameters
 
 Use this command with one of the additional arguments: *image, cluster, task*.
 
@@ -187,7 +263,7 @@ Rhoc print-vars image
 
 You can use `--provider` flag to check parameters specific for certain provider (*default:* GCP)
 
-###### Help
+### Help
 
 ```
 Rhoc help
@@ -195,11 +271,11 @@ Rhoc help
 
 This command prints a short help summary. Also, each RHOC command has a `--help` switch for providing command-related help.
 
-###### Verbose info
+### Set Verbosity
 
 Use `-v` or `--verbose` flag with any command to get extended info.
 
-###### Simulation
+### Simulate
 
 Use `-s` or `--simulate` flag with any command to simulate running the execution without actually running any commands that can modify anything in the cloud or locally. Useful for checking what RHOC would perform without actually performing it.
 
@@ -231,26 +307,26 @@ For applying them by command line use
 
 #### Task 
 
-###### parameters
+##### parameters
 
 A task combines parameters from all entities it might need to create. For individual entities see:
 
 - [Image parameters](#image)
 - [Cluster parameters](#cluster)
 
-###### options
+##### options
 
 - `--keep-cluster` keep the cluster running after script is done
 - `--use-storage` allow accessing to storage data
 - `--newline-conversion` enable conversion of DOS/Windows newlines to UNIX newlines for the uploaded script (useful if you're running RHOC on Windows)
 - `--overwrite` overwrite the content of the remote file with the content of the local file
-- `--remote-path` name for the uploaded script on the remote machine (*default:* `"./Rhoc-script"`)
-- `--upload-files` files for copying into the cluster (into `~/Rhoc-upload` folder with the same names)
-- `--download-files` files for copying from the cluster (into `./Rhoc-download` folder with the same names)
+- `--remote-path` name for the uploaded script on the remote machine (*default:* `"./RHOC-script"`)
+- `--upload-files` files for copying into the cluster (into `~/RHOC-upload` folder with the same names)
+- `--download-files` files for copying from the cluster (into `./RHOC-download` folder with the same names)
 
 #### Image
 
-###### parameters
+##### parameters
 
 - `project_name` (*default:* `"zyme-cluster"`)
 - `user_name` user name for ssh access (*default:* `"ec2-user"`)
@@ -259,7 +335,7 @@ A task combines parameters from all entities it might need to create. For indivi
 
 #### Cluster
 
-###### parameters
+##### parameters
 
 - `project_name` (*default:* `"zyme-cluster"`) 
 
@@ -287,7 +363,7 @@ A task combines parameters from all entities it might need to create. For indivi
 
 #### Storage
 
-###### parameters
+##### parameters
 
 - `project_name` (*default:* `"zyme-cluster"`)
 - `user_name` user name for ssh access (*default:* `"ec2-user"`)
@@ -298,57 +374,30 @@ A task combines parameters from all entities it might need to create. For indivi
 - `ssh_key_pair_path` (*default:* `"private_keys"`)
 - `storage_key_name` (*default:* `"hello-storage"`)
 
-### Examples
+## Additional Examples
+The included examples in this section all assume correct build of RHOC and correct set up of user credentials. The examples will use the default cloud provider and the default user credentials file.
 
-#### Examples preparation steps
+### LAMMPS 
+LAMMPS is a molecular dynamics simulation application. The included workload will launch a container to execute LAMMPS on a single compute node. This requires use the the `storage` capabilities of RHOC.
 
-Let's create your first own cluster. 
-
-- Take the first two steps from [How to use RHOC](#how-to-use-RHOC) ([1](#preparation-steps) and [2](#installing-RHOC)) if you haven't completed them yet.
-- Acquire GCP credentials file and save it as `user_credentials/credentials.json`.
-
-#### Run High-Performance LINPACK benchmark on cloud cluster
-
-- Complete the preparation steps from [Example preparation steps](#examples-preparation-steps)
-- Run the LINPACK benchmark:
+1. Create storage for the LAMPPS workload
    ```
-   Rhoc run examples/linpack/linpack-cluster.sh --parameters examples/linpack/linpack-cluster.json --upload-files examples/linpack/HPL.dat
+   ./Rhoc create storage --parameters=examples/lammps/lammps-single-node.json
    ```
-- Your end of output should look like this:
-   ```
-   *Finished        1 tests with the following results:*
-
-                                           *1 tests completed and passed residual checks,*
-
-                                            *0 tests completed and failed residual checks,*
-
-                                           *0 tests skipped because of illegal input values.*
-
-   --------------------------------------------------------------------------------
-
-   *End of Tests.*
-   ```
-- This is it! You have just successfully ran LINPACK on the cloud.
-
-#### Run LAMMPS Molecular Dynamics Simulator on login node
-
-- Complete the preparation steps from [Example preparation steps](#examples-preparation-steps)
-- Create storage:
-   ```
-   Rhoc create storage --parameters=examples/lammps/lammps-single-node.json
-   ```
-- Consult `Rhoc state` for connection details to the storage node, SSH into it using provided private key and IP address
-- Prepare `/storage/lammps/` folder for upload data:
+2. Use information from `./RHOC state` to get connection details to the storage node created in step 1. SSH into the storage nodeusing provided private key and IP address and execute the following commands:
    ```
    sudo mkdir /storage/lammps/
    chown lammps-user /storage/lammps/
    ```
-- Upload `lammps.avx512.simg` container into `/storage/lammps/`, e.g. by `scp -i path/to/private_key.pem path/to/lammps.avx512.simg lammps-user@storage-address:/storage/lammps/`
-- Run LAMMPS benchmark:
+   Then log out of the storage node.
+
+3. Upload `lammps.avx512.simg` container into `/storage/lammps/`, e.g. by `scp -i path/to/private_key.pem path/to/lammps.avx512.simg lammps-user@storage-address:/storage/lammps/`
+
+4. Execute the LAMMPS benchmark through RHOC
    ```
    Rhoc run examples/lammps/lammps-single-node.sh --parameters=examples/lammps/lammps-single-node.json --use-storage --download-files=lammps.log
    ```
-- Your content of `Rhoc-download/lammps.log` file should look like this (*Note:* this was received by running on 4 cores):
+If successful, the content of `RHOC-download/lammps.log` file should look like this (*Note:* this was received by running on 4 cores):
    ```
    args: 2
    OMP_NUM_THREADS=1
@@ -365,15 +414,28 @@ Let's create your first own cluster.
    Running: water Performance: 7.432 timesteps/sec
    Output file lammps-cluster-login_lammps_2019_11_17.results and all the logs for each workload lammps-cluster-login_lammps_2019_11_17 ... are located at /home/lammps-user/lammps
    ```
-- This is it! You have just successfully ran LAMMPS on the cloud.
-- Don't forget to destroy storage.
+5. *Important* Destroy storage using the `./RHOC destroy` command with the storage ID to avoid unintended storage fees with the cloud provider.
 
-#### Run OpenFOAM Benchmark on login node
+### OpenFOAM 
 
-- Complete the preparation steps from [Example preparation steps](#examples-preparation-steps)
-- Run OpenFOAM benchmark, where *7* is the `endTime` of computing benchmark:
+OpenFOAM is a computation fluid dynamics application.
+
+1. Run OpenFOAM benchmark, where *7* is the `endTime` of computing benchmark:
    ```
    Rhoc run -r us-east1 -z b --parameters examples/openfoam/openfoam-single-node.json --download-files DrivAer/log.simpleFoam --overwrite examples/openfoam/openfoam-single-node.sh 7
    ```
-- Full log of running OpenFOAM should be available as `Rhoc-download/log.simpleFoam`
-- This is it! You have just successfully ran OpenFOAM on the cloud.
+Full log of running OpenFOAM should be available as `RHOC-download/log.simpleFoam`
+
+## Cloud Provider Quick Reference
+This section is intended to provide easy references to cloud providers relative to RHOC setup.
+
+### Amazon Web Services
+
+[Help generating the user credentials for Amazon Web Services](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey) 
+
+### Google Cloud Platform 
+
+[Google Cloud Platform](https://accounts.google.com/signup/v2/webcreateaccount?service=cloudconsole&continue=https%3A%2F%2Fconsole.cloud.google.com%2F%3F_ga%3D2.221590619.-23985963.1522764483%26ref%3Dhttps%3A%2F%2Fcloud.google.com%2F&flowName=GlifWebSignIn&flowEntry=SignUp&nogm=true) Account Information
+
+[Help generating the user credentials for Google Cloud Platform](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys)
+
