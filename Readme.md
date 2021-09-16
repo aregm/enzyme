@@ -7,7 +7,7 @@
    4. [Currently Supported providers](#Currently-supported-providers)
 2. [Installing RHOC](#installing-RHOC)
    1. [Required software](#Required-software)
-   2. [Cloan the RHOC respository](#clone-the-RHOC-repository)
+   2. [Clone the RHOC respository](#clone-the-RHOC-repository)
    3. [Build RHOC](#build-RHOC)
 3. [Getting Started with RHOC](#Getting-Started-with-RHOC)
    1. [User Credentials File](#User-Credentials-File)
