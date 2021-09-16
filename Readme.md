@@ -7,7 +7,7 @@
    4. [Currently Supported providers](#Currently-supported-providers)
 2. [Installing Enzyme](#installing-Enzyme)
    1. [Required software](#Required-software)
-   2. [Cloan the Enzyme respository](#clone-the-Enzyme-repository)
+   2. [Clone the Enzyme respository](#clone-the-Enzyme-repository)
    3. [Build Enzyme](#build-Enzyme)
 3. [Getting Started with Enzyme](#Getting-Started-with-Enzyme)
    1. [User Credentials File](#User-Credentials-File)
