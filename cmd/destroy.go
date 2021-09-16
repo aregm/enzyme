@@ -7,8 +7,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/state"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/state"
 )
 
 var (
@@ -28,7 +28,7 @@ func init() {
 }
 
 // Destructible interface should be implemented for an object that should be
-// destroyed via Rhoc's destroy command
+// destroyed via enzyme's destroy command
 type Destructible interface {
 	GetDestroyedTarget() controller.Target
 }

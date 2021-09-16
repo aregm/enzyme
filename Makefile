@@ -14,7 +14,7 @@ else
 GOEXT :=
 endif
 
-Rhoc_EXE = $(PKG_DIR)/Rhoc$(GOEXT)
+enzyme_EXE = $(PKG_DIR)/enzyme$(GOEXT)
 PACKER_EXE = $(TOOLS_DIR)/packer$(GOEXT)
 TERRAFORM_EXE = $(TOOLS_DIR)/terraform$(GOEXT)
 
@@ -33,9 +33,9 @@ $(TERRAFORM_EXE):
 	@cd hashicorp/terraform && git reset --hard
 
 bin:
-	@echo Building Rhoc
+	@echo Building enzyme
 	@mkdir -p $(PKG_DIR)
-	@GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-X Rhoc/cmd.VERSION=$(GIT_HASH)" -mod=vendor -o $(Rhoc_EXE)
+	@GOOS=$(GOOS) GOARCH=$(GOARCH) go build -ldflags "-X enzyme/cmd.VERSION=$(GIT_HASH)" -mod=vendor -o $(enzyme_EXE)
 
 package: bin $(PACKER_EXE) $(TERRAFORM_EXE)
 	@echo Preparing package
@@ -48,7 +48,7 @@ $(ARC_FILE): package
 
 $(ARC_LITE): package
 	@echo Making lite package $(ARC_LITE)
-	@cd $(PKG_DIR) && tar -czf ../$(ARC_LITE) templates/ postprocess/ examples/ Rhoc
+	@cd $(PKG_DIR) && tar -czf ../$(ARC_LITE) templates/ postprocess/ examples/ enzyme
 
 all: $(ARC_FILE)
 

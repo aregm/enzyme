@@ -6,7 +6,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/config"
+	"enzyme/pkg/config"
 )
 
 // AWS provider is connected only through default ec2-user user

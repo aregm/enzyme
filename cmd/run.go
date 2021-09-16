@@ -4,8 +4,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/entities/runtask"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/entities/runtask"
 )
 
 var (
@@ -62,7 +62,7 @@ func init() {
 	rootCmd.AddCommand(runCommand)
 	addServiceParams(runCommand)
 
-	runCommand.Flags().StringVar(&remotePath, "remote-path", "Rhoc-script",
+	runCommand.Flags().StringVar(&remotePath, "remote-path", "enzyme-script",
 		"name for the transmitted program on the remote machine")
 	runCommand.Flags().BoolVar(&newlineConversion, "newline-conversion", false,
 		"enable conversion of DOS/Windows newlines to UNIX newlines")
@@ -73,7 +73,7 @@ func init() {
 	runCommand.Flags().BoolVar(&useStorage, "use-storage", false,
 		"use external storage node during execution")
 	runCommand.Flags().StringSliceVar(&uploadFiles, "upload-files", nil,
-		"files for copying into the cluster (into '~/Rhoc-upload' folder with the same names)")
+		"files for copying into the cluster (into '~/enzyme-upload' folder with the same names)")
 	runCommand.Flags().StringSliceVar(&downloadFiles, "download-files", nil,
-		"files for copying from the cluster (into './Rhoc-download' folder with the same names)")
+		"files for copying from the cluster (into './enzyme-download' folder with the same names)")
 }

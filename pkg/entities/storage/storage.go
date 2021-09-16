@@ -6,12 +6,12 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/config"
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/entities/cluster"
-	"Rhoc/pkg/provider"
-	"Rhoc/pkg/state"
-	storage_pkg "Rhoc/pkg/storage"
+	"enzyme/pkg/config"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/entities/cluster"
+	"enzyme/pkg/provider"
+	"enzyme/pkg/state"
+	storage_pkg "enzyme/pkg/storage"
 )
 
 // Status describes status of the storage node

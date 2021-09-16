@@ -9,11 +9,11 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/entities/cluster"
-	"Rhoc/pkg/entities/common"
-	"Rhoc/pkg/entities/storage"
-	"Rhoc/pkg/ssh"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/entities/cluster"
+	"enzyme/pkg/entities/common"
+	"enzyme/pkg/entities/storage"
+	"enzyme/pkg/ssh"
 )
 
 func makeStageLogger(task *taskState, stage string) *log.Entry {
@@ -202,7 +202,7 @@ func (action *uploadData) Apply() error {
 		}
 	}
 
-	uploadFolder := "Rhoc-upload"
+	uploadFolder := "enzyme-upload"
 
 	// upload desired files
 	for _, localFilePath := range action.task.uploadFiles {
@@ -300,7 +300,7 @@ func (action *downloadResults) Apply() error {
 		}
 	}
 
-	downloadFolder := "Rhoc-download"
+	downloadFolder := "enzyme-download"
 
 	// download desired files
 	for _, remoteFilePath := range action.task.downloadFiles {

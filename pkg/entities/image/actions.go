@@ -11,10 +11,10 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	action_pkg "Rhoc/pkg/action"
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/entities/common"
-	"Rhoc/pkg/provider"
+	action_pkg "enzyme/pkg/action"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/entities/common"
+	"enzyme/pkg/provider"
 )
 
 type makeConfig struct {

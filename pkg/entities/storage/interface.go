@@ -6,8 +6,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/provider"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/provider"
 )
 
 // ConnectDetails describes the details on how to connect to the storage node
@@ -85,7 +85,7 @@ func refreshConnectDetails(node *storageNodeState, nextStatus Status) error {
 	return nil
 }
 
-// for additional information provided by "Rhoc state"
+// for additional information provided by "enzyme state"
 func (node *storageNodeState) MoreInfo() (string, error) {
 	if node.connection.PublicAddress != "" {
 		return fmt.Sprintf("SCP files to/from %s@%s:/storage, key file=%s",

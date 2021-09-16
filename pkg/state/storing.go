@@ -7,7 +7,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/storage"
+	"enzyme/pkg/storage"
 )
 
 // Chest is an interface that actually stores and retrieves state objects,

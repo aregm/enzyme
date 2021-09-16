@@ -6,8 +6,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	action_pkg "Rhoc/pkg/action"
-	"Rhoc/pkg/config"
+	action_pkg "enzyme/pkg/action"
+	"enzyme/pkg/config"
 )
 
 // MissingKey is an error returned by ExtractOutputValues when a value cannot be found in output

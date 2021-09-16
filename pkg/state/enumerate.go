@@ -7,7 +7,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/storage"
+	"enzyme/pkg/storage"
 )
 
 // HierarchyHandler is a function that should return either a blueprint Entry that

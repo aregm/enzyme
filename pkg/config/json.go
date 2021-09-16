@@ -7,7 +7,7 @@ import (
 	"github.com/intel-go/viper"
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/storage"
+	"enzyme/pkg/storage"
 )
 
 type jsonConfig struct {

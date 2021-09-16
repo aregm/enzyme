@@ -6,7 +6,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"Rhoc/pkg/state"
+	"enzyme/pkg/state"
 )
 
 // MoreInfoer is a Thing companion interface which can produce additional information,
@@ -36,7 +36,7 @@ func printEntry(id string, entry state.Entry) error {
 var (
 	stateCmd = &cobra.Command{
 		Use:   "state",
-		Short: "Print the state of Rhoc",
+		Short: "Print the state of enzyme",
 		Long:  `This command shows all manageable entities (images, clusters, storages etc.) with their statuses.`,
 		Args:  cobra.ExactValidArgs(0),
 		Run: func(cmd *cobra.Command, args []string) {

@@ -3,10 +3,10 @@ package state
 import (
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/storage"
+	"enzyme/pkg/storage"
 )
 
-// Entry is an interface that describes persistent part of an Rhoc object
+// Entry is an interface that describes persistent part of an enzyme object
 type Entry interface {
 	Hierarchy() ([]string, error)
 	ToPublic() (interface{}, error)
@@ -14,7 +14,7 @@ type Entry interface {
 }
 
 // Fetcher is a helper struct that wraps a Chest to actually store and
-// load Entries which are describing the state of any Rhoc persistent object
+// load Entries which are describing the state of any enzyme persistent object
 type Fetcher struct {
 	Chest Chest
 }

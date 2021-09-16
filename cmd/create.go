@@ -7,10 +7,10 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/entities/cluster"
-	"Rhoc/pkg/entities/image"
-	"Rhoc/pkg/entities/storage"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/entities/cluster"
+	"enzyme/pkg/entities/image"
+	"enzyme/pkg/entities/storage"
 )
 
 var (
@@ -19,7 +19,7 @@ var (
 	createCommand = &cobra.Command{
 		Use:   fmt.Sprintf("create {%s}", strings.Join(validCreateTargets, ", ")),
 		Short: fmt.Sprintf("creates the {%s} in the public cloud", strings.Join(validCreateTargets, ", ")),
-		Long: `This command tells Rhoc to create a VM image, to spawn VM instances forming
+		Long: `This command tells enzyme to create a VM image, to spawn VM instances forming
 a cluster or to create VM instance based on a disk that holds your data.`,
 		ValidArgs: validCreateTargets,
 		Args:      cobra.ExactValidArgs(1),

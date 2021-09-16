@@ -30,7 +30,7 @@ func TestRunLoggedCmdDirOutput(t *testing.T) {
 	}
 
 	content := buffer.String()
-	expectedLogContent := "Rhoc: running command: go version"
+	expectedLogContent := "enzyme: running command: go version"
 
 	if strings.HasPrefix(content, expectedContent) != true {
 		t.Errorf("recorded content: [%s] does not match read content: [%s]", content, expectedContent)
@@ -50,7 +50,7 @@ func TestLoggedCmd(t *testing.T) {
 	testLogFilePrefix := filepath.Join(os.TempDir(), "TestRunLoggedCmdDirOutput")
 	name := "go"
 	arg := "version"
-	expectedLogContent := "Rhoc: running command: go version"
+	expectedLogContent := "enzyme: running command: go version"
 
 	logName, err := RunLoggedCmd(testLogFilePrefix, name, arg)
 	if err != nil {

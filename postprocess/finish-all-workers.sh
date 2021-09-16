@@ -5,7 +5,7 @@ set -e
 # first argument is login node (which is used to run this script), ignore it
 shift
 
-MPI_NODEFILE=~/Rhoc-nodefile
+MPI_NODEFILE=~/enzyme-nodefile
 # set up MPI nodefile
 rm -f $MPI_NODEFILE
 

@@ -9,7 +9,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/logging"
+	"enzyme/pkg/logging"
 )
 
 // RunLoggedCmd executes the program <name> in current working directory
@@ -35,7 +35,7 @@ func RunLoggedCmdDirOutput(logfilePrefix string, workDir string, output io.Write
 
 		cmdLog = logging.GetLogWriter()
 	} else {
-		logStr := fmt.Sprintf("Rhoc: running command: %s %s\n-----\n\n", name, strings.Join(args, " "))
+		logStr := fmt.Sprintf("enzyme: running command: %s %s\n-----\n\n", name, strings.Join(args, " "))
 		if n, err := io.WriteString(cmdLogfile, logStr); err != nil {
 			log.WithField("logFile", cmdLogfile).Fatalf(
 				"RunLoggedCmdDirOutput: only %d bytes from %d were written into logFile: %s", n, len(logStr),

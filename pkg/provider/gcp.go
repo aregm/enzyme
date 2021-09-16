@@ -5,7 +5,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/config"
+	"enzyme/pkg/config"
 )
 
 type providerGCP struct {

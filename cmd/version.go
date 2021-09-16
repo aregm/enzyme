@@ -13,11 +13,11 @@ var (
 
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "Alpha 0.0.1 Version RHOC",
-	Long: `This is experimental alpha engineering version of RHOC. Very unstable. ` +
+	Short: "Alpha 0.0.1 Version enzyme",
+	Long: `This is experimental alpha engineering version of enzyme. Very unstable. ` +
 		`Use at your own risk. SPDX License indicator: MIT`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Printf("Rhoc %s\n", VERSION)
+		fmt.Printf("enzyme %s\n", VERSION)
 	},
 }
 

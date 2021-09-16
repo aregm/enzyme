@@ -10,7 +10,7 @@ import (
 	isatty_pkg "github.com/mattn/go-isatty"
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/storage"
+	"enzyme/pkg/storage"
 )
 
 var (
@@ -149,7 +149,7 @@ func InitLogging(verbose bool) {
 		addHook(log.PanicLevel, log.ErrorLevel, os.Stderr)
 	}
 
-	mainLogPrefix := storage.MakeStorageFilename(storage.LogCategory, []string{"Rhoc"}, "")
+	mainLogPrefix := storage.MakeStorageFilename(storage.LogCategory, []string{"enzyme"}, "")
 	lazyLog := &lazyFile{prefix: mainLogPrefix}
 
 	log.RegisterExitHandler(func() {

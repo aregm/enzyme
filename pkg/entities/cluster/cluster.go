@@ -6,11 +6,11 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/config"
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/provider"
-	"Rhoc/pkg/state"
-	"Rhoc/pkg/storage"
+	"enzyme/pkg/config"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/provider"
+	"enzyme/pkg/state"
+	"enzyme/pkg/storage"
 )
 
 // Status describes status of the cluster

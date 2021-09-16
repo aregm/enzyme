@@ -5,11 +5,11 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/config"
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/provider"
-	"Rhoc/pkg/ssh"
-	"Rhoc/pkg/state"
+	"enzyme/pkg/config"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/provider"
+	"enzyme/pkg/ssh"
+	"enzyme/pkg/state"
 )
 
 // Status describes status of the "run" task

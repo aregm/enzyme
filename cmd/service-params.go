@@ -6,8 +6,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"Rhoc/pkg/config"
-	"Rhoc/pkg/provider"
+	"enzyme/pkg/config"
+	"enzyme/pkg/provider"
 )
 
 var (
@@ -88,9 +88,9 @@ func addServiceParams(cmd *cobra.Command) {
 	cmd.Flags().StringVar(&parametersFile, "parameters", "", "file with parameters")
 
 	cmd.Flags().StringToStringVar(&vars, "vars", nil,
-		"list of user's variables; for example, 'image_name=Rhoc,disk_size=30'")
+		"list of user's variables; for example, 'image_name=enzyme,disk_size=30'")
 
-	if os.Getenv("Rhoc_ENABLE_SOCKS") != "" {
+	if os.Getenv("enzyme_ENABLE_SOCKS") != "" {
 		cmd.Flags().StringVar(&socksHost, "socks-host", socksHost, "socks-host to access the network")
 		cmd.Flags().IntVar(&socksPort, "socks-port", socksPort, "socks-port to access the network")
 	}

@@ -125,6 +125,6 @@ func init() {
 		panic(fmt.Sprintf("cannot get current dir: %v", err))
 	}
 
-	storageDir = filepath.Join(curdir, ".Rhoc")
+	storageDir = filepath.Join(curdir, ".enzyme")
 	logDir = filepath.Join(curdir, "logs")
 }

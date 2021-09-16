@@ -8,13 +8,13 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	action_pkg "Rhoc/pkg/action"
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/entities/cluster"
-	"Rhoc/pkg/entities/common"
-	"Rhoc/pkg/entities/image"
-	"Rhoc/pkg/provider"
-	storage_pkg "Rhoc/pkg/storage"
+	action_pkg "enzyme/pkg/action"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/entities/cluster"
+	"enzyme/pkg/entities/common"
+	"enzyme/pkg/entities/image"
+	"enzyme/pkg/provider"
+	storage_pkg "enzyme/pkg/storage"
 )
 
 func enableConfig(name, path string) (func(), error) {

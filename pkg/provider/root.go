@@ -10,7 +10,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/config"
+	"enzyme/pkg/config"
 )
 
 const (
@@ -25,9 +25,9 @@ const (
 )
 
 var (
-	// RhoctemplatesFolder is variable for storing of Packer and
+	// enzymetemplatesFolder is variable for storing of Packer and
 	// Terraform templates
-	RhoctemplatesFolder string
+	enzymetemplatesFolder string
 
 	imageVariablesSectionName   string
 	clusterVariablesSectionName string
@@ -40,7 +40,7 @@ var (
 )
 
 func init() {
-	RhoctemplatesFolder = "templates/"
+	enzymetemplatesFolder = "templates/"
 
 	imageVariablesSectionName = "variables"
 	clusterVariablesSectionName = "variable"
@@ -56,7 +56,7 @@ func init() {
 }
 
 func makeAbsPath(providerName string, templatePath string) string {
-	composedPath := filepath.Join(RhoctemplatesFolder, providerName, templatePath)
+	composedPath := filepath.Join(enzymetemplatesFolder, providerName, templatePath)
 	result, err := filepath.Abs(composedPath)
 
 	if err != nil {
@@ -385,7 +385,7 @@ func IsProviderSupported(providerName string) bool {
 	return false
 }
 
-// RootFolder returns root folder of Rhoc project
+// RootFolder returns root folder of enzyme project
 func RootFolder() (string, error) {
 	exProgram, err := os.Executable()
 	if err != nil {

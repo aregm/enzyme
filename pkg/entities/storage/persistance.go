@@ -5,9 +5,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/entities/cluster"
-	"Rhoc/pkg/provider"
-	"Rhoc/pkg/state"
+	"enzyme/pkg/entities/cluster"
+	"enzyme/pkg/provider"
+	"enzyme/pkg/state"
 )
 
 func getHierarchy(prov provider.Provider, name string) ([]string, error) {

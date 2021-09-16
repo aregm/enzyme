@@ -6,9 +6,9 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
-	"Rhoc/pkg/config"
-	"Rhoc/pkg/controller"
-	"Rhoc/pkg/provider"
+	"enzyme/pkg/config"
+	"enzyme/pkg/controller"
+	"enzyme/pkg/provider"
 )
 
 // ResourceDescriptor is a descriptor for uniquely identifying a resource, e.g. used by Terraform
@@ -140,7 +140,7 @@ func parseTerraformJSON(cluster *clusterState) (config.Config, error) {
 	return provider.ParseTerraformOutputs(clusterRootDir, tfLogPrefix, logger)
 }
 
-// for additional information provided by "Rhoc state"
+// for additional information provided by "enzyme state"
 func (cluster *clusterState) MoreInfo() (string, error) {
 	if cluster.connection.PublicAddress != "" {
 		return fmt.Sprintf("SSH to %s@%s, key file=%s",

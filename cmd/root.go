@@ -6,9 +6,9 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 
-	"Rhoc/pkg/logging"
-	"Rhoc/pkg/provider"
-	"Rhoc/pkg/state"
+	"enzyme/pkg/logging"
+	"enzyme/pkg/provider"
+	"enzyme/pkg/state"
 )
 
 var (
@@ -17,10 +17,10 @@ var (
 	fetcher  state.Fetcher
 
 	rootCmd = &cobra.Command{
-		Use:   "Rhoc",
-		Short: "Rhoc is easy to use hybrid cloud HPCaaS creator and runner",
-		Long: `Rhoc is a software tool which allows users to set up Virtual Private
-Cluster in the cloud in a cloud provider-agnostic way. Rhoc creates
+		Use:   "enzyme",
+		Short: "enzyme is easy to use hybrid cloud HPCaaS creator and runner",
+		Long: `enzyme is a software tool which allows users to set up Virtual Private
+Cluster in the cloud in a cloud provider-agnostic way. enzyme creates
 Intel HPC Platform compatible cluster anywhere where the term "cluster"
 is applicable and runs a workload there.`,
 		Run: func(cmd *cobra.Command, args []string) {
@@ -32,7 +32,7 @@ is applicable and runs a workload there.`,
 )
 
 func init() {
-	cobra.OnInitialize(initRhoc)
+	cobra.OnInitialize(initenzyme)
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&simulate, "simulate", "s", false,
 		"simulate running the execution - do not perform any actual actions")
@@ -40,7 +40,7 @@ func init() {
 	log.SetOutput(os.Stdout)
 }
 
-func initRhoc() {
+func initenzyme() {
 	if verbose {
 		log.SetLevel(log.InfoLevel)
 	} else {
