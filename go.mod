@@ -1,4 +1,4 @@
-module Rhoc
+module enzyme
 
 go 1.13
 

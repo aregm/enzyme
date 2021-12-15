@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Rhoc/cmd"
+	"enzyme/cmd"
 )
 
 func main() {
