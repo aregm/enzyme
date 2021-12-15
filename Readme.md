@@ -87,7 +87,7 @@ Enzyme uses open source tools from [Hashicorp](https://www.hashicorp.com), and t
 If needed, the sub-modules can be downloaded after cloning by using 
 
   ```
-  git submodule --init
+  git submodule init
   git submodule update 
   ```
 
