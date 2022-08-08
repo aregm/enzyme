@@ -1,4 +1,6 @@
 # Enzyme - Rapid Orchestration in the Cloud
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fintel-go%2Fenzyme.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fintel-go%2Fenzyme?ref=badge_shield)
+
 
 1. [Introduction](#introduction)
    1. [Overview](#overview)
@@ -439,3 +441,7 @@ This section is intended to provide easy references to cloud providers relative 
 
 [Help generating the user credentials for Google Cloud Platform](https://cloud.google.com/iam/docs/creating-managing-service-account-keys#creating_service_account_keys)
 
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fintel-go%2Fenzyme.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fintel-go%2Fenzyme?ref=badge_large)
