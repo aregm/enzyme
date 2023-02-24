@@ -8,6 +8,6 @@ require (
 	github.com/pkg/sftp v1.10.1
 	github.com/sirupsen/logrus v1.2.0
 	github.com/spf13/cobra v0.0.5
-	golang.org/x/crypto v0.0.0-20190820162420-60c769a6c586
-	golang.org/x/net v0.0.0-20190522155817-f3200d17e092
+	golang.org/x/crypto v0.0.0-20210921155107-089bfa567519
+	golang.org/x/net v0.7.0
 )
