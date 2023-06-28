@@ -1,0 +1,73 @@
+# https://kubernetes.dask.org/en/latest/operator_resources.html
+apiVersion: kubernetes.dask.org/v1
+kind: DaskCluster
+metadata:
+  name: dask
+  namespace: dask
+spec:
+  worker:
+    replicas: ${dask_workers} # number of replica workers to spawn
+    spec: # PodSpec, standard k8s pod - https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#podspec-v1-core
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: dask.org/component
+                      operator: In
+                      values:
+                        - worker
+                topologyKey: kubernetes.io/hostname
+      containers:
+        - name: worker
+          image: "ghcr.io/dask/dask:2022.8.1-py3.9"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - dask-worker
+            - --name
+            - $(DASK_WORKER_NAME)
+  scheduler:
+    spec: # PodSpec, standard k8s pod - https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#podspec-v1-core
+      containers:
+        - name: scheduler
+          image: "ghcr.io/dask/dask:2022.8.1-py3.9"
+          imagePullPolicy: "IfNotPresent"
+          args:
+            - dask-scheduler
+          ports:
+            - name: tcp-comm
+              containerPort: 8786
+              protocol: TCP
+            - name: http-dashboard
+              containerPort: 8787
+              protocol: TCP
+          readinessProbe:
+            httpGet:
+              port: http-dashboard
+              path: /health
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: http-dashboard
+              path: /health
+            initialDelaySeconds: 15
+            periodSeconds: 20
+    service: # ServiceSpec, standard k8s service - https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.21/#servicespec-v1-core
+      type: NodePort
+      selector:
+        dask.org/cluster-name: dask
+        dask.org/component: scheduler
+      ports:
+        - name: tcp-comm
+          protocol: TCP
+          port: 8786
+          targetPort: "tcp-comm"
+          nodePort: 30020
+        - name: http-dashboard
+          protocol: TCP
+          port: 8787
+          targetPort: "http-dashboard"
+          nodePort: 30021
