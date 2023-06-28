@@ -1,9 +1,0 @@
-{
-    "project_name": "zyme-cluster",
-    "image_name": "go-ssf-image-test2",
-    "cluster_name": "demo-cluster",
-    "user_name": "demo-user",
-    "disk_size": "30",
-    "worker_count": "6",
-    "instance_type_worker_node": "n1-standard-8"
-}
