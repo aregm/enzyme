@@ -144,9 +144,15 @@ function with_proxy() {
 
   cluster_node "export DEBIAN_FRONTEND=noninteractive; apt-get update -y; apt-get install -y --no-install-recommends redsocks"
 
-  echo "$proxy_url" | awk 'match($0, /(https?:\/\/)?([^:]+):([^:]+)/, m) {print m[2] " " m[3]}' | while read proxy_host proxy_port; do
+  if [[ $proxy_url =~ (https?:\/\/)?([^:]+):([^:]+) ]]; then
+    proxy_host="${BASH_REMATCH[2]}"
+    proxy_port="${BASH_REMATCH[3]}"
     pass "proxy_host: $proxy_host, proxy_port: $proxy_port"
-    redsocks_config="\
+  else
+    fail "Unable to parse proxy URL $proxy_url"
+  fi
+
+  redsocks_config="\
 base {
     log_debug = off;
     log_info = on;
@@ -163,26 +169,25 @@ redsocks {
     type = http-connect;
 }
 "
-    cluster_node "echo '$redsocks_config' > /etc/redsocks.conf"
-    cluster_node "/etc/init.d/redsocks restart"
+  cluster_node "echo '$redsocks_config' > /etc/redsocks.conf"
+  cluster_node "/etc/init.d/redsocks restart"
 
-    cluster_node "iptables -w 60 -t nat -N REDSOCKS"
+  cluster_node "iptables -w 60 -t nat -N REDSOCKS"
 
-    for nw in $REDSOCKS_SKIP; do
-      cluster_node "iptables -w 60 -t nat -A REDSOCKS -d $nw -j RETURN"
-    done
-
-    cluster_node "iptables -w 60 -t nat -A REDSOCKS -p tcp --dport 80 -j REDIRECT --to-ports 12345"
-    cluster_node "iptables -w 60 -t nat -A REDSOCKS -p tcp --dport 443 -j REDIRECT --to-ports 12345"
-
-    cluster_node "iptables -w 60 -t nat -A PREROUTING -p tcp --dport 80 -j REDSOCKS"
-    cluster_node "iptables -w 60 -t nat -A PREROUTING -p tcp --dport 443 -j REDSOCKS"
+  for nw in $REDSOCKS_SKIP; do
+    cluster_node "iptables -w 60 -t nat -A REDSOCKS -d $nw -j RETURN"
   done
+
+  cluster_node "iptables -w 60 -t nat -A REDSOCKS -p tcp --dport 80 -j REDIRECT --to-ports 12345"
+  cluster_node "iptables -w 60 -t nat -A REDSOCKS -p tcp --dport 443 -j REDIRECT --to-ports 12345"
+
+  cluster_node "iptables -w 60 -t nat -A PREROUTING -p tcp --dport 80 -j REDSOCKS"
+  cluster_node "iptables -w 60 -t nat -A PREROUTING -p tcp --dport 443 -j REDSOCKS"
 }
 
 # Update CoreDNS configuration file to resolve external endpoints in cluster correctly
 function with_corefile() {
-  CONTROl_PLANE_IP=$(docker inspect "$CLUSTER_NAME-control-plane" | awk 'match($0, /"IPAddress": "(.+)"/, m) {print m[1]}')
+  CONTROl_PLANE_IP=$(docker inspect --format '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$CLUSTER_NAME-control-plane")
   pass "Cluster IP: $CONTROl_PLANE_IP"
   control_node "python -m scripts.kubernetes.coredns $CONTROl_PLANE_IP $INGRESS_DOMAIN"
 }
