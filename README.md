@@ -52,4 +52,4 @@ await program.run()
 
 ## Links
 
-* [docs/kind.md]()
+* [docs/kind.md](https://github.com/aregm/enzyme/blob/x1/docs/kind.md)
