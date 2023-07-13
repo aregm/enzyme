@@ -161,4 +161,6 @@ module "shared-volume" {
   source = "./modules/shared-volume"
   namespace_labels = var.namespace_labels
   shared_volume_size = var.shared_volume_size
+  shared_volume_storage_class = var.shared_volume_storage_class
+  ceph_secret_namespace = var.ceph_secret_namespace
 }

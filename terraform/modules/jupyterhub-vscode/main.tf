@@ -7,7 +7,7 @@ locals {
       cmd = [
         "--auth", "none",
         "--bind-addr", "0.0.0.0:8888",
-        "-vvv",
+        "-v",
       ]
       # required for sudo
       allow_privilege_escalation = true

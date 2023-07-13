@@ -4,16 +4,17 @@
 
 set -e
 
-# https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-
-source "$SCRIPT_DIR/functions.sh"
-
 # Default values that can be overriden by corresponding environment variables
 : ${KIND_VERSION:="v0.19.0"}
 : ${CLUSTER_NAME:="x1"}
 : ${REDSOCKS_SKIP:="0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 169.254.0.0/16 172.16.0.0/12 192.168.0.0/16 198.18.0.0/15 224.0.0.0/4 240.0.0.0/4"}
 : ${INGRESS_DOMAIN:="localtest.me"}
+: ${CONTROL_NODE_IMAGE:=pbchekin/ccn:0.0.1}
+
+# https://stackoverflow.com/questions/59895/getting-the-source-directory-of-a-bash-script-from-within
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+source "$SCRIPT_DIR/functions.sh"
 
 # Install tools, such as kind, to ~/bin/
 # TODO: also support ~/.local/bin

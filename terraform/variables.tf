@@ -244,3 +244,16 @@ variable "shared_volume_size" {
   type = string
   default = "1024Gi"
 }
+
+variable "shared_volume_storage_class" {
+  description = "Storage class for shared volume"
+  type = string
+  default = "ceph-filesystem"
+}
+
+variable "ceph_secret_namespace" {
+  description = "Ceph secret namespace"
+  type = string
+  default = "rook-ceph"
+}
+

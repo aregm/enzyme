@@ -2,7 +2,7 @@
 
 : ${SCRIPT_DIR:=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )}
 
-: ${CONTROL_NODE_IMAGE:=pbchekin/x1-control-node:0.0.11}
+: ${CONTROL_NODE_IMAGE:=pbchekin/ccn:0.0.1}
 : ${PROXY_IMAGE:=pbchekin/x1-proxy:0.0.1}
 
 X1_ROOT="$( cd $SCRIPT_DIR && cd ../.. && pwd)"
@@ -33,6 +33,26 @@ function control_node() {
 
   if [[ -v PG_CONN_STR ]]; then
     docker_cmd+=( --env PG_CONN_STR )
+  fi
+
+  if [[ -v TF_PG_CONN_STR ]]; then
+    docker_cmd+=( --env TF_PG_CONN_STR )
+  fi
+
+  if [[ -v PGUSER ]]; then
+    docker_cmd+=( --env PGUSER )
+  fi
+
+  if [[ -v PGSSLMODE ]]; then
+    docker_cmd+=( --env PGSSLMODE )
+  fi
+
+  if [[ -v PG_SCHEMA_NAME ]]; then
+    docker_cmd+=( --env PG_SCHEMA_NAME )
+  fi
+
+  if [[ -v PGPASSWORD ]]; then
+    docker_cmd+=( --env PGPASSWORD )
   fi
 
   for aws_var in $(env | grep -E '^AWS_' | cut -f1 -d=); do
@@ -86,7 +106,6 @@ function control_node() {
   fi
 
   docker_cmd+=( $CONTROL_NODE_IMAGE )
-
   if (( $# != 0 )); then
     docker_cmd+=( -c "$*" )
   fi

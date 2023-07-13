@@ -104,10 +104,10 @@ export dockerhub_proxy=dockerhubregistry.example.com
 ### Tests
 
 ```shell
-./scripts/deploy/aws.sh --console
+./scripts/deploy/kind.sh --console
 
 # On control node execute
 export INGRESS_DOMAIN=localtest.me
 export RAY_ENDPOINT=localtest.me:10001
-./x1/scripts/jumphost/test.sh
+./x1/scripts/ccn/test.sh
 ```
