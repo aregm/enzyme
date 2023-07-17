@@ -52,4 +52,4 @@ await program.run()
 
 ## Links
 
-* [docs/kind.md]()
+* [docs/kind.md](docs/kind.md)
