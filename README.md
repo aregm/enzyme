@@ -12,6 +12,16 @@ cd enzyme
 ./scripts/deploy/kind.sh
 ```
 
+## What's in Package?
+
+Out of the box X1 will provide an integrated set of Intel-optimized data science libraries:
+* Pandas/Modin
+* Scikit-Learn/Intel SciKit-Learn Extensions
+* XGBoost
+* Intel PyTorch Extensions/Intel Tensorflow Extensions
+* Ray
+* MatplotLib
+
 ## Quick start
 
 The cluster's endpoints are accessible only from localhost:
@@ -22,16 +32,6 @@ The cluster's endpoints are accessible only from localhost:
 * http://prefect.localtest.me
 
 In your browser, navigate to http://jupyter.localtest.me.
-
-## What's in Package?
-
-Out of the box X1 will provide an integrated set of Intel-optimized data science libraries:
-* Pandas/Modin
-* Scikit-Learn/Intel SciKit-Learn Extensions
-* XGBoost
-* Intel PyTorch Extensions/Intel Tensorflow Extensions
-* Ray
-* MatplotLib
 
 ### Define a flow
 
