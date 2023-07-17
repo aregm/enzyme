@@ -23,6 +23,16 @@ The cluster's endpoints are accessible only from localhost:
 
 In your browser, navigate to http://jupyter.localtest.me.
 
+## What's in Package?
+
+Out of the box X1 will provide an integrated set of Intel-optimized data science libraries:
+* Pandas/Modin
+* Scikit-Learn/Intel SciKit-Learn Extensions
+* XGBoost
+* Intel PyTorch Extensions/Intel Tensorflow Extensions
+* Ray
+* MatplotLib
+
 ### Define a flow
 
 Currently, ICL uses [Prefect](https://docs.prefect.io/) for defining basic workflow building blocks: [flow and tasks](https://docs.prefect.io/tutorials/first-steps/#flows-tasks-and-subflows).
