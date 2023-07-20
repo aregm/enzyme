@@ -1,0 +1,29 @@
+repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.11.5
+    hooks:
+      - id: isort
+        language_version: python3
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+      - id: black
+        language_version: python3
+# Temporary disable flake8 since it cannot use pyproject.yaml
+#  - repo: https://github.com/pycqa/flake8
+#    rev: 4.0.1
+#    hooks:
+#      - id: flake8
+  - repo: https://github.com/pycqa/pylint
+    rev: v2.15.3
+    hooks:
+      - id: pylint
+  - repo: https://github.com/econchick/interrogate
+    rev: 1.5.0
+    hooks:
+      - id: interrogate
+        pass_filenames: false
+  - repo: https://github.com/Lucas-C/pre-commit-hooks-bandit
+    rev: v1.0.6
+    hooks:
+      - id: python-bandit-vulnerability-check
