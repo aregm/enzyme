@@ -1,9 +1,0 @@
-{
-    "resource": {
-        "google_compute_image": {
-            "zyme_image": {
-                "name": "zyme-image-name"
-            }
-        }
-    }
-}

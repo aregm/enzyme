@@ -1,9 +1,0 @@
-{
-    "resource": {
-        "aws_ami": {
-            "zyme_image": {
-                "name": "zyme-image-name"
-            }
-        }
-    }
-}
