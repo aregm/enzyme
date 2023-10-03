@@ -1,0 +1,13 @@
+# Ignore everything.
+**
+
+# Except the following.
+!src
+!LICENSE.txt
+!pyproject.toml
+!poetry.lock
+!README.md
+
+# Filter unwanted files from included folders.
+**/__pycache__
+**.py[cod]
